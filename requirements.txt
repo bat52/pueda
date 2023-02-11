@@ -1,0 +1,7 @@
+shutil
+wget
+edalize
+pyverilator
+dtrx
+veriloggen
+myhdl
