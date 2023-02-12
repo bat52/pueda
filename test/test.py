@@ -26,6 +26,10 @@ class TestStringMethods(unittest.TestCase):
             print('count = %d' % pv.sim.io.count)
         assert(pv.sim.io.count == 0)
 
+    def test_verilator_counter(self):
+        from test_verilator_counter import test_verilator_counter
+        test_verilator_counter()
+
     def test_yosys_counter(self):
         from pueda.yosys import yosys
         yosys(top='counter', src_dirs = ['./counter/rtl'], synth_en=True)
