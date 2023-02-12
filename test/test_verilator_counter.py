@@ -9,8 +9,8 @@ def test_verilator_counter():
     verilator(
         simname='counter', top='counter',                        
         src_dir = ['./counter/rtl','./counter/verilator'], 
-        inc_dir = [], # ['./counter/verilator/inc'],
-        dump_en = False)
+        inc_dir = [],
+        dump_en = False, sim_en=True)
 
 if __name__ == '__main__':
     test_verilator_counter()            

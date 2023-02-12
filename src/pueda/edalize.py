@@ -116,7 +116,7 @@ def icarus(simname='', top='', src_dirs = [], inc_dirs = [],
 
 def verilator(simname='', top='', src_dir=[], inc_dir = [], 
               options = [],
-              dump_en = True, dump_fst = False, gtkw='') -> None:
+              dump_en = True, dump_fst = False, gtkw='',sim_en=True) -> None:
     # tool
     tool = 'verilator'
     work_root = get_clean_work(tool)
@@ -153,15 +153,17 @@ def verilator(simname='', top='', src_dir=[], inc_dir = [],
     os.makedirs(work_root)
     backend.configure()
     backend.build()
-    backend.run()
 
-    if dump_en:
-        if dump_fst:
-            dump_file = 'dump.fst'
-        else:
-            dump_file = 'dump.vcd'
-        vcd_view( os.path.join(work_root, dump_file), 
-                  gtkw, '-o')
+    if sim_en:
+        backend.run()
+
+        if dump_en:
+            if dump_fst:
+                dump_file = 'dump.fst'
+            else:
+                dump_file = 'dump.vcd'
+            vcd_view( os.path.join(work_root, dump_file), 
+                    gtkw, '-o')
 
 def trellis(simname='',top='',src_dir=[], inc_dir=[]) -> None:
 
