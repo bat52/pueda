@@ -10,15 +10,14 @@ module counter(clk,reset,up_down,load,data,count);
   //always block will be executed at each and every positive edge of the clock
   always @(posedge clk) 
   begin
-    if(reset)    //Set Counter to Zero
+    if(reset)        //Set Counter to Zero
       count <= 0;
     else if(load)    //load the counter with data value
       count <= data;
-    else if(up_down)        //count up
+    else if(up_down) //count up
       count <= count + 1;
-    else            //count down
+    else             //count down
       count <= count - 1;
   end
 
-endmodule
-//:counter
+endmodule /* counter */
