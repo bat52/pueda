@@ -19,15 +19,30 @@ def eda_get_files(dirlist,work_root,fmts=['.v','.sv','.vh'],print_en=False) -> l
         fext = os.path.splitext(fname)[1]
 
         # source files
-        if fext in ['.v','.vh']:
+        if fext in ['.v']:
             f = {'name' : os.path.relpath(fname, work_root),
             'file_type' : 'verilogSource'}
-        elif fext in ['.sv','.svh']:
+        elif fext in ['.vh']:
+            f = {'name' : os.path.relpath(fname, work_root),
+            'file_type' : 'verilogSource',
+            'is_include_file' : True
+            }
+        elif fext in ['.sv']:
             f = {'name' : os.path.relpath(fname, work_root),
             'file_type' : 'systemVerilogSource'}
-        elif fext in ['.c','.cpp','.h']:
+        elif fext in ['.svh']:
+            f = {'name' : os.path.relpath(fname, work_root),
+            'file_type' : 'systemVerilogSource',
+            'is_include_file' : True
+            }
+        elif fext in ['.c','.cpp']:
             f = {'name' : os.path.relpath(fname, work_root),
             'file_type' : 'cSource'}
+        elif fext in ['.h']:
+            f = {'name' : os.path.relpath(fname, work_root),
+            'file_type' : 'cSource',
+            'is_include_file' : True
+            }
         elif fext in ['.vpi']:
             f = {'name' : os.path.relpath(fname, work_root),
             'file_type' : 'verilogSource'}
@@ -172,7 +187,10 @@ def trellis(simname='',top='',src_dir=[], inc_dir=[]) -> None:
     work_root = get_clean_work(tool)
     
     # get design files
-    files = eda_get_files(src_dir, work_root, fmts=['.v','.vh'])
+    files = eda_get_files(src_dir, work_root, fmts=['.v'])
+
+    # get include directories
+    files += eda_get_files(inc_dir, work_root, fmts=['.vh'])
 
     # get include directories
     options = get_inc_list(inc_dir,prefix='read -incdir ')
@@ -199,26 +217,23 @@ def trellis(simname='',top='',src_dir=[], inc_dir=[]) -> None:
     backend.build()
     backend.run()
 
-def yosys(simname='',top='',src_dir=[], inc_dir=[]) -> None:
+def yosys_edalize(simname='',top='',src_dir=[], inc_dir=[], arch='ice40') -> None:
 
     # tool
     tool = 'yosys'
     work_root = get_clean_work(tool)
     
     # get design files
-    files = eda_get_files(src_dir, work_root, fmts=['.v','.vh'])
-    # files = eda_get_files(SRC_DIR_LIST, work_root, fmts=['.v'])
+    files = eda_get_files(src_dir, work_root, fmts=['.v'])
 
     # get include directories
-    # files += get_inc_list(inc_dir)
-    # files += INC_DIR_LIST
-
+    files += eda_get_files(inc_dir, work_root, fmts=['.vh'])
+    
     tool_options = {
         tool :
             {
-            # 'incdirs' : INC_DIR_LIST,
             # 'yosys_synth_options'  : options,
-            'arch': 'ice40',
+            'arch': arch,
         },
         
     }

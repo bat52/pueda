@@ -38,7 +38,6 @@ def get_source_files(directory,fmts=['.v','.sv','.vh']) -> list:
     # print(foutlist)
 
     return foutlist
-    pass
 
 def get_inc_list(inclist,work_root='',prefix='-I') -> list:
 
