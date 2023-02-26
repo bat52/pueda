@@ -1,6 +1,7 @@
 from setuptools import setup, find_packages
+import os
 
-datadir = os.path.join('src','pueda','icarus')
+datadir = os.path.join('data','icarus')
 datafiles = [(d, [os.path.join(d,f) for f in files])
     for d, folders, files in os.walk(datadir)]
 
@@ -20,7 +21,6 @@ setup(
     keywords='python EDA CAD',
     data_files = datafiles, 
     install_requires=[
-          # 'shutil',
           'wget',
           'edalize',
           'pyverilator',
