@@ -15,7 +15,7 @@ setup(
     url='https://github.com/bat52/pueda',
     keywords='python EDA CAD',
     install_requires=[
-          'shutil',
+          # 'shutil',
           'wget',
           'edalize',
           'pyverilator',
