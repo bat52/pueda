@@ -15,8 +15,7 @@ setup(
     url='https://github.com/bat52/pueda',
     keywords='python EDA CAD',
     package_data = {
-    'icarus/src': ['*.v'],
-    'icarus/inc': ['*.vh']
+    'icarus': ['*.v', '*.vh']
     }
     install_requires=[
           # 'shutil',
