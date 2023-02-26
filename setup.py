@@ -1,5 +1,9 @@
 from setuptools import setup, find_packages
 
+datadir = os.path.join('src','pueda','icarus')
+datafiles = [(d, [os.path.join(d,f) for f in files])
+    for d, folders, files in os.walk(datadir)]
+
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
@@ -14,8 +18,9 @@ setup(
     description="Collection of python for micro-Electronic Design Automation",
     url='https://github.com/bat52/pueda',
     keywords='python EDA CAD',
+    data_files = datafiles, 
     install_requires=[
-          'shutil',
+          # 'shutil',
           'wget',
           'edalize',
           'pyverilator',
