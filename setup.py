@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-datadir = os.path.join('src','icarus')
+datadir = os.path.join('src','pueda','icarus')
 datafiles = [(d, [os.path.join(d,f) for f in files])
     for d, folders, files in os.walk(datadir)]
 
