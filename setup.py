@@ -18,7 +18,7 @@ setup(
     description="Collection of python for micro-Electronic Design Automation",
     url='https://github.com/bat52/pueda',
     keywords='python EDA CAD',
-    data_files = datafiles 
+    data_files = datafiles, 
     install_requires=[
           # 'shutil',
           'wget',
