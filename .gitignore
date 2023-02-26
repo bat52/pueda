@@ -3,3 +3,7 @@ test/work_*
 test/obj_dir/*
 test/parser.out
 test/parsetab.py
+*.vcd
+*.vpi
+*.o
+*.bak
