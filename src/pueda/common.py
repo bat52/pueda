@@ -78,11 +78,14 @@ def get_remote_files(url,flist=[],dstdir='./work_get'):
         if fext == '.zip':
             os.system('cd %s && dtrx -f `ls *.zip && cd ..`' % dstdir)
 
-def vcd_view(fname,savefname='',options='', postcmd=''):
+def vcd_view(fname,savefname='',options='', postcmd='', block_en = True):
     if os.path.isfile(savefname):
         cmdstr = 'gtkwave %s -a %s %s %s' % (options, savefname,fname,postcmd)
     else:
         cmdstr = 'gtkwave %s %s %s' % (options,fname, postcmd)
+
+    if not(block_en):
+        cmdstr += ' &'
 
     # print(cmdstr)
     os.system(cmdstr)
