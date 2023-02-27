@@ -37,7 +37,7 @@ def get_source_files(directory,fmts=['.v','.sv','.vh']) -> list:
                 foutlist = foutlist + llist
             pass
     else: # if os.path.isdir(directory):
-        print('%s : WARNING!!! directory %s does not exist!' % (__name__, directory) )
+        print('%s : WARNING!!! directory "%s" does not exist!' % (__name__, directory) )
         foutlist = []
 
     # print(foutlist)
