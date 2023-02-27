@@ -80,8 +80,13 @@ def cosimulation(vpi_path='./work_myhdl_vpi', vpi='myhdl', dut='', work='./work_
     return Cosimulation( cmdstr, **ports )
 
 def myhdl_cosim_dut(topmodule='', topfile='',dump_en=False, ports={},
-    simname ='', src_dirs=[],inc_dirs=[]):
-    work, wrapper = cosim_make_stub(topfile=topfile,topmodule=topmodule, dump_en=dump_en)
+    simname ='', src_dirs=[],inc_dirs=[], stub_en = False):
+
+    if stub_en:
+        work, wrapper = cosim_make_stub(topfile=topfile,topmodule=topmodule, dump_en=dump_en)
+    else:
+        work = ''
+        wrapper = topmodule
 
     # build dut
     print('##### Building icarus...')
