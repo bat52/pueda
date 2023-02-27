@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
 
 import os
+import pkg_resources
 from edalize import *
+import pueda
 from pueda.common import get_source_files_alldir, vcd_view, get_inc_list, get_clean_work
 from pueda.icarus import myhdl_vpi, fst_vpi
+
 
 def eda_get_files(dirlist,work_root,fmts=['.v','.sv','.vh'],print_en=False) -> list:
     fnames = get_source_files_alldir(dirlist,fmts=fmts)
@@ -64,8 +67,16 @@ def icarus(simname='', top='', src_dirs = [], inc_dirs = [],
     work_root = get_clean_work(tool,True)
 
     if dump_en:
-        inc_dirs = inc_dirs + [ os.path.join(os.path.dirname(__file__), 'icarus/inc') ]
-        src_dirs = src_dirs + [ os.path.join(os.path.dirname(__file__), 'icarus/src') ]
+
+        r_data_path = '../../../../data/'
+        assert( pkg_resources.resource_isdir(pueda.__name__,r_data_path))
+
+        data_path = pkg_resources.resource_filename(pueda.__name__,r_data_path)
+        
+        inc_dirs = inc_dirs + [ os.path.join(data_path, 'icarus/inc') ]
+        src_dirs = src_dirs + [ os.path.join(data_path, 'icarus/src') ]
+        # inc_dirs = inc_dirs + [ os.path.join(os.path.dirname(__file__), 'icarus/inc') ]
+        # src_dirs = src_dirs + [ os.path.join(os.path.dirname(__file__), 'icarus/src') ]
 
         iverilog_options += [
             '-DDUMP_EN', 
