@@ -27,5 +27,6 @@ setup(
           'dtrx',
           'myhdl',
           'veriloggen',
+          'pyvcd'
           ],
 )
