@@ -16,24 +16,29 @@ def get_source_files_alldir(dirlist,fmts=['.v','.sv','.vh']) -> list:
 
 def get_source_files(directory,fmts=['.v','.sv','.vh']) -> list:
     # print(directory)
-    flist = os.listdir(directory)
 
-    foutlist = []
-    for f in flist:
-        # print(f)
-        fbase,fext = os.path.splitext(f)
-        fullfile = os.path.abspath(os.path.join(directory,f))
-        if os.path.isfile(fullfile) and (fext in fmts):
-            # print('file %s' % f)
-            foutlist.append(fullfile)
-        elif os.path.isdir(fullfile):
-            # recursively browse dir
-            # print('recursion %s' % f)
-            ldir = os.path.join(directory,f)
-            # print(ldir)
-            llist = get_source_files( ldir ,fmts=fmts )
-            foutlist = foutlist + llist
-        pass
+    if os.path.isdir(directory):
+        flist = os.listdir(directory)
+
+        foutlist = []
+        for f in flist:
+            # print(f)
+            fbase,fext = os.path.splitext(f)
+            fullfile = os.path.abspath(os.path.join(directory,f))
+            if os.path.isfile(fullfile) and (fext in fmts):
+                # print('file %s' % f)
+                foutlist.append(fullfile)
+            elif os.path.isdir(fullfile):
+                # recursively browse dir
+                # print('recursion %s' % f)
+                ldir = os.path.join(directory,f)
+                # print(ldir)
+                llist = get_source_files( ldir ,fmts=fmts )
+                foutlist = foutlist + llist
+            pass
+    else: # if os.path.isdir(directory):
+        print('%s : WARNING!!! directory %s does not exist!' % (__name__, directory) )
+        foutlist = []
 
     # print(foutlist)
 
