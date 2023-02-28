@@ -6,15 +6,15 @@ import shutil
 def list2str(l,sep=' '):
     return sep.join(str(s) for s in l)
 
-def get_source_files_alldir(dirlist,fmts=['.v','.sv','.vh']) -> list:
+def get_source_files_alldir(dirlist,fmts=['.v','.sv','.vh'], excludes = []) -> list:
     files = []
     # create files list
     for d in dirlist:
-        files = files + get_source_files(d,fmts=fmts)
+        files = files + get_source_files(d,fmts=fmts, excludes=excludes)
 
     return files
 
-def get_source_files(directory,fmts=['.v','.sv','.vh']) -> list:
+def get_source_files(directory,fmts=['.v','.sv','.vh'], excludes = []) -> list:
     # print(directory)
 
     if os.path.isdir(directory):
@@ -25,7 +25,7 @@ def get_source_files(directory,fmts=['.v','.sv','.vh']) -> list:
             # print(f)
             fbase,fext = os.path.splitext(f)
             fullfile = os.path.abspath(os.path.join(directory,f))
-            if os.path.isfile(fullfile) and (fext in fmts):
+            if os.path.isfile(fullfile) and (fext in fmts) and not(f in excludes) :
                 # print('file %s' % f)
                 foutlist.append(fullfile)
             elif os.path.isdir(fullfile):

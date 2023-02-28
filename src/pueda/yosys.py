@@ -4,14 +4,14 @@
 import os
 from pueda.common import get_source_files_alldir, get_inc_list, get_clean_work, write_file_lines
 
-def yosys(top='', src_dirs = [], inc_dirs = [], synth_en=True) -> None:
+def yosys(top='', src_dirs = [], inc_dirs = [], exclude_files = [], synth_en=True) -> None:
 
     tool = 'yosys'
     work_root = get_clean_work(tool,True)
 
     # create yosys script
     lines  = get_inc_list(inc_dirs,prefix='read -incdir ')
-    lines += ['read_verilog ' + s for s in get_source_files_alldir(src_dirs,fmts=['.v'])]
+    lines += ['read_verilog ' + s for s in get_source_files_alldir(src_dirs,fmts=['.v'], excludes=exclude_files)]
 
     lines.append('hierarchy -top %s' % top)
     fullfile = '%s_full.v' % os.path.join(work_root,top)
