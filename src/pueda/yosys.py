@@ -23,7 +23,8 @@ def yosys(top='', src_dirs = [], inc_dirs = [], exclude_files = [], synth_en=Tru
             lines += ['abc -g cmos2','stat']
         else:
             lines += ['synth_ice40']
-        lines.append('write_verilog %s_synth.v' % os.path.join(work_root,top))
+        synthfile = '%s_synth.v' % os.path.join(work_root,top)
+        lines.append('write_verilog %s' % synthfile)
         # lines += ['show -prefix ./ecdsa256 -format svg -viewer ']
         # lines += ['stat -tech xilinx']
 
@@ -36,4 +37,4 @@ def yosys(top='', src_dirs = [], inc_dirs = [], exclude_files = [], synth_en=Tru
     print(cmdstr)
     os.system(cmdstr)
 
-    return fullfile
+    return fullfile,synthfile
