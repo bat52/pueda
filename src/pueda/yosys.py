@@ -27,6 +27,8 @@ def yosys(top='', src_dirs = [], inc_dirs = [], exclude_files = [], synth_en=Tru
         lines.append('write_verilog %s' % synthfile)
         # lines += ['show -prefix ./ecdsa256 -format svg -viewer ']
         # lines += ['stat -tech xilinx']
+    else:
+        synthfile = ''
 
     # print output
     ysoutfile = os.path.join(work_root,'%s.ys' % top)
@@ -37,4 +39,4 @@ def yosys(top='', src_dirs = [], inc_dirs = [], exclude_files = [], synth_en=Tru
     print(cmdstr)
     os.system(cmdstr)
 
-    return fullfile,synthfile
+    return {'single':fullfile,'synth':synthfile,'work':work_root}
