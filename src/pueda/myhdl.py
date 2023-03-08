@@ -154,6 +154,6 @@ class myhdl_cosim_wrapper(object):
     def sim_run(self,duration=0):
         self.sim.run(duration)
 
-    def sim_view(self):
+    def sim_view(self, vcd = 'dump.vcd', gtkw = ''):
         if self.dump_en:
-            vcd_view(os.path.join(self.work, 'dump.vcd'),postcmd='&')
+            vcd_view(os.path.join(self.work, fname = vcd, savefname = gtkw), block_en = False)
