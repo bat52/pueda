@@ -15,7 +15,7 @@ def vpi_make(src_dirs=['./'], inc_dirs=[], args = []):
     argstr = list2str(args)
     srcstr = list2str(src)
     incstr = list2str(inc)
-    cmdstr = list2str( ['iverilog-vpi', argstr, srcstr, incstr, ' > iverilog-vpi.log' ] )
+    cmdstr = list2str( ['iverilog-vpi', argstr, srcstr, incstr]) # , ' > iverilog-vpi.log' ] )
 
     print('### Making VPI...')
     print(cmdstr)
@@ -57,7 +57,7 @@ class myhdl_vpi(custom_vpi):
         tool='myhdl_vpi'
         url="https://raw.githubusercontent.com/myhdl/myhdl/master/cosimulation/icarus"
         flist = ['myhdl.c', 'myhdl_table.c', 'Makefile']
-        custom_vpi.__init__(self,tool=tool,url=url,flist=flist, args=['-w'])
+        custom_vpi.__init__(self,tool=tool,url=url,flist=flist) # , args=['-w'])
 
 class fst_vpi(custom_vpi):
    
