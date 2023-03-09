@@ -57,7 +57,7 @@ class myhdl_vpi(custom_vpi):
         tool='myhdl_vpi'
         url="https://raw.githubusercontent.com/myhdl/myhdl/master/cosimulation/icarus"
         flist = ['myhdl.c', 'myhdl_table.c', 'Makefile']
-        custom_vpi.__init__(self,tool=tool,url=url,flist=flist)
+        custom_vpi.__init__(self,tool=tool,url=url,flist=flist, args=['-w'])
 
 class fst_vpi(custom_vpi):
    
