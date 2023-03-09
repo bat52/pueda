@@ -15,7 +15,7 @@ def vpi_make(src_dirs=['./'], inc_dirs=[], args = []):
     argstr = list2str(args)
     srcstr = list2str(src)
     incstr = list2str(inc)
-    cmdstr = list2str( ['iverilog-vpi', argstr, srcstr, incstr ] )
+    cmdstr = list2str( ['iverilog-vpi', argstr, srcstr, incstr, ' > iverilog-vpi.log' ] )
 
     print('### Making VPI...')
     print(cmdstr)
