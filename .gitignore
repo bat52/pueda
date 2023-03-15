@@ -1,9 +1,9 @@
 *.pyc
 test/work_*
 test/obj_dir/*
-test/parser.out
-test/parsetab.py
+*parsetab.py
 *.vcd
 *.vpi
 *.o
 *.bak
+*.out

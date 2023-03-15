@@ -91,10 +91,16 @@ def vcd_view(fname,savefname='',options='', postcmd='', block_en = True):
     os.system(cmdstr)
     pass
 
-def get_clean_work(tool='',makedir=False,rm_en=True):
-    work_root = os.path.join(os.getcwd() , 'work_' + tool)    
+def get_work_path(tool=''):
+    return os.path.join(os.getcwd() , 'work_' + tool)    
 
-    if rm_en:
+def work_exists(tool=''):
+    return os.path.isdir(get_work_path(tool))
+
+def get_clean_work(tool='',makedir=False,rm_en=True):
+    work_root = get_work_path(tool) 
+
+    if work_exists(tool) and rm_en:
         # delete work directory
         shutil.rmtree(work_root,ignore_errors=True)
     

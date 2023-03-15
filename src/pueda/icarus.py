@@ -4,7 +4,7 @@ import os
 import sys
 sys.path.append( os.path.join(os.path.dirname(__file__), '..') )
 
-from pueda.common import get_source_files_alldir, get_remote_files, get_clean_work, list2str, get_inc_list
+from pueda.common import get_source_files_alldir, get_remote_files, get_work_path, work_exists, get_clean_work, list2str, get_inc_list
 
 def vpi_make(src_dirs=['./'], inc_dirs=[], args = []):
     # print(src_dirs)
@@ -27,17 +27,27 @@ def vpi_make(src_dirs=['./'], inc_dirs=[], args = []):
 class custom_vpi(object):
     work = './'
 
-    def __init__(self,tool='custom_vpi',url='',flist=[],inc_dirs=[],args=[], custom_make_cmds=[]):
-        self._init_work(tool=tool)
-        self._get_custom_vpi(url=url,flist=flist)      
+    def __init__(self,tool='custom_vpi',url='',flist=[],inc_dirs=[],args=[], custom_make_cmds=[],rm_en=False):
+        if not( self._init_work(tool=tool,rm_en=rm_en) ):
+            self._get_custom_vpi(url=url,flist=flist)      
 
-        if len(custom_make_cmds)>0:
-            self.custom_make(cmds=custom_make_cmds)
+            if len(custom_make_cmds)>0:
+                self.custom_make(cmds=custom_make_cmds)
+            else:
+                self.auto_make(inc_dirs=inc_dirs,args=args)
         else:
-            self.auto_make(inc_dirs=inc_dirs,args=args)
+            print('WARNING: skip compiling VPI %s, because folder already exists!!! ' % tool)
 
-    def _init_work(self,tool=''):
-        self.work = get_clean_work(tool=tool,rm_en=False) # do not remove if exist
+    def _init_work(self,tool='',rm_en=False):
+        exist = work_exists(tool)
+
+        if exist:
+            if rm_en:
+                self.work = get_clean_work(tool=tool,rm_en=rm_en) # do not remove if exist
+            else:
+                self.work = get_work_path(tool)        
+        
+        return exist
 
     def _get_custom_vpi(self,url,flist):
         get_remote_files(url=url,flist=flist,dstdir=self.work)
