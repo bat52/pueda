@@ -14,7 +14,7 @@ def vcd_view(fname,savefname='',options='', postcmd='', block_en = True):
     basegtkw = basefname + '.gtkw'
         
     if os.path.isfile(basegtkw):
-        savefname = basefname
+        savefname = basegtkw
 
     if os.path.isfile(savefname):
         cmdstr = 'gtkwave %s -a %s %s %s' % (options, savefname,fname,postcmd)
