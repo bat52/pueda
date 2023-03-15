@@ -13,7 +13,7 @@ def vcd_view(fname,savefname='',options='', postcmd='', block_en = True):
     basefname = os.path.splitext(fname)[0]
     basegtkw = basefname + '.gtkw'
         
-    if os.path.isfile(basefname):
+    if os.path.isfile(basegtkw):
         savefname = basefname
 
     if os.path.isfile(savefname):
