@@ -6,3 +6,5 @@ dtrx
 veriloggen
 myhdl
 pyvcd
+vcdvcd
+numpy

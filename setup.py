@@ -27,6 +27,8 @@ setup(
           'dtrx',
           'myhdl',
           'veriloggen',
-          'pyvcd'
+          'pyvcd',
+          'vcdvcd',
+          'numpy'
           ],
 )
