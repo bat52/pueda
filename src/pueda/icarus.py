@@ -27,25 +27,25 @@ def vpi_make(src_dirs=['./'], inc_dirs=[], args = []):
 class custom_vpi(object):
     work = './'
 
-    def __init__(self,tool='custom_vpi',url='',flist=[],inc_dirs=[],args=[], custom_make_cmds=[],rm_en=False):
-        if not( self._init_work(tool=tool,rm_en=rm_en) ):
-            self._get_custom_vpi(url=url,flist=flist)      
+    def __init__(self,tool='custom_vpi',url='',flist=[],inc_dirs=[],args=[], custom_make_cmds=[],rm_en=True):
+        #if not( self._init_work(tool=tool,rm_en=rm_en) ):
+        self._init_work(tool=tool,rm_en=rm_en)
+        self._get_custom_vpi(url=url,flist=flist)      
 
-            if len(custom_make_cmds)>0:
-                self.custom_make(cmds=custom_make_cmds)
-            else:
-                self.auto_make(inc_dirs=inc_dirs,args=args)
+        if len(custom_make_cmds)>0:
+            self.custom_make(cmds=custom_make_cmds)
         else:
-            print('WARNING: skip compiling VPI %s, because folder already exists!!! ' % tool)
+            self.auto_make(inc_dirs=inc_dirs,args=args)
+        #else:
+        #    print('WARNING: skip compiling VPI %s, because folder already exists!!! ' % tool)
 
     def _init_work(self,tool='',rm_en=False):
         exist = work_exists(tool)
 
-        if exist:
-            if rm_en:
-                self.work = get_clean_work(tool=tool,rm_en=rm_en) # do not remove if exist
-            else:
-                self.work = get_work_path(tool)        
+        if rm_en or not(exist):
+            self.work = get_clean_work(tool=tool,rm_en=rm_en) # do not remove if exist
+        else:
+            self.work = get_work_path(tool)        
         
         return exist
 
