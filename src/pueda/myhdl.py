@@ -2,7 +2,8 @@
 
 import os
 from pueda.edalize import icarus
-from pueda.common import get_clean_work, vcd_view
+from pueda.common import get_clean_work
+from pueda.vcd import vcd_view
 import veriloggen as vg
 from myhdl import *
 

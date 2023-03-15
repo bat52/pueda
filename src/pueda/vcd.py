@@ -1,10 +1,32 @@
 #!/usr/bin/env python3
 
+import os
 import numpy as np
 from ast import literal_eval
 
 # https://pypi.org/project/vcdvcd/
 from vcdvcd import VCDVCD
+
+def vcd_view(fname,savefname='',options='', postcmd='', block_en = True):
+
+    # by default look for gtkw file named as vcd
+    basefname = os.path.splitext(fname)[0]
+    basegtkw = basefname + '.gtkw'
+        
+    if os.path.isfile(basefname):
+        savefname = basefname
+
+    if os.path.isfile(savefname):
+        cmdstr = 'gtkwave %s -a %s %s %s' % (options, savefname,fname,postcmd)
+    else:
+        cmdstr = 'gtkwave %s %s %s' % (options,fname, postcmd)
+
+    if not(block_en):
+        cmdstr += ' &'
+
+    # print(cmdstr)
+    os.system(cmdstr)
+    pass
 
 def vcd_tv2list(tv,fmt='dec'):
     time = []

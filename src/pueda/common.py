@@ -3,6 +3,9 @@
 import os
 import shutil
 
+# load vcd_view for backwards compatibility
+from pueda.vcd import vcd_view
+
 def list2str(l,sep=' '):
     return sep.join(str(s) for s in l)
 
@@ -77,19 +80,6 @@ def get_remote_files(url,flist=[],dstdir='./work_get'):
         fext = os.path.splitext(url)[1]
         if fext == '.zip':
             os.system('cd %s && dtrx -f `ls *.zip && cd ..`' % dstdir)
-
-def vcd_view(fname,savefname='',options='', postcmd='', block_en = True):
-    if os.path.isfile(savefname):
-        cmdstr = 'gtkwave %s -a %s %s %s' % (options, savefname,fname,postcmd)
-    else:
-        cmdstr = 'gtkwave %s %s %s' % (options,fname, postcmd)
-
-    if not(block_en):
-        cmdstr += ' &'
-
-    # print(cmdstr)
-    os.system(cmdstr)
-    pass
 
 def get_work_path(tool=''):
     return os.path.join(os.getcwd() , 'work_' + tool)    

@@ -4,9 +4,9 @@ import os
 import pkg_resources
 from edalize import *
 import pueda
-from pueda.common import get_source_files_alldir, vcd_view, get_inc_list, get_clean_work
+from pueda.common import get_source_files_alldir, get_inc_list, get_clean_work
 from pueda.icarus import myhdl_vpi, fst_vpi
-
+from pueda.vcd    import vcd_view
 
 def eda_get_files(dirlist,work_root,fmts=['.v','.sv','.vh'],print_en=False) -> list:
     fnames = get_source_files_alldir(dirlist,fmts=fmts)
