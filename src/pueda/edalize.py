@@ -2,7 +2,10 @@
 
 import os
 import pkg_resources
-from edalize import *
+
+# from edalize import *
+from edalize.edatool import get_edatool # required by edalize 0.5.0
+
 import pueda
 from pueda.common import get_source_files_alldir, get_inc_list, get_clean_work
 from pueda.icarus import myhdl_vpi, fst_vpi
