@@ -23,7 +23,7 @@ setup(
     install_requires=[
           'wget',
           'edalize',
-          'pyverilator',
+          'pyverilator-mm',
           'dtrx',
           'myhdl',
           'veriloggen',
