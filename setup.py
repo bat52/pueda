@@ -17,6 +17,8 @@ setup(
     packages=find_packages('src'),
     package_dir={'': 'src'},
     description="Collection of python for micro-Electronic Design Automation",
+    long_description=long_description,
+    long_description_content_type="text/markdown",
     url='https://github.com/bat52/pueda',
     keywords='python EDA CAD',
     data_files = datafiles, 
