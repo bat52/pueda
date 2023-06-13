@@ -3,9 +3,11 @@
 import os
 import shutil
 import pyverilator
+from pueda.vcd import vcd_view
 
 class pyverilator_wrapper(object):
     sim = None
+    dump_filename = ''
 
     def __init__(self, fname='', src_dirs=[], command_args = [],
                  dump_en = False, dump_fst = False, dump_filename = 'dump'):
@@ -34,14 +36,19 @@ class pyverilator_wrapper(object):
                 dump_ext = '.fst'
             else:
                 dump_ext = '.vcd'
+            self.dump_filename = dump_filename + dump_ext
             # start gtkwave to view the waveforms as they are made
-            self.sim.start_vcd_trace(dump_filename + dump_ext)
+            self.sim.start_vcd_trace(self.dump_filename)
             # self.view_waves()
 
     def view_waves(self):
-        # start gtkwave to view the waveforms as they are made
-        self.sim.start_gtkwave()
+        if False:
+            # start gtkwave to view the waveforms as they are made
+            self.sim.start_gtkwave()
 
-        # add all the io and internal signals to gtkwave
-        # self.sim.send_to_gtkwave(self.sim.io)
-        # self.sim.send_to_gtkwave(self.sim.internals)
+            # add all the io and internal signals to gtkwave
+            # self.sim.send_to_gtkwave(self.sim.io)
+            # self.sim.send_to_gtkwave(self.sim.internals)
+        else:
+            vcd_view(self.dump_filename)
+

@@ -25,7 +25,7 @@ class TestStringMethods(unittest.TestCase):
             pv.sim.clock.tick()
             print('count = %d' % pv.sim.io.count)
         assert pv.sim.io.count == 0
-        pv.view_waves()
+        # pv.view_waves() this may hold the test, so skip it
 
     def test_verilator_counter(self):
         from test_verilator_counter import test_verilator_counter
