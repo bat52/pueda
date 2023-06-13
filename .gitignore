@@ -7,3 +7,5 @@ test/obj_dir/*
 *.o
 *.bak
 *.out
+*.tar.gz
+src/pueda.egg-info/*
