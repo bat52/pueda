@@ -7,12 +7,12 @@ import pyverilator
 class pyverilator_wrapper(object):
     sim = None
 
-    def __init__(self, fname='', src_dirs=[], command_args = [], dump_en = False):
+    def __init__(self, fname='', src_dirs=[], command_args = [],
+                 dump_en = False, dump_fst = True, dump_filename = 'dump'):
 
         # rename to .v, if .sv
         if not os.path.isfile(fname):
-            print('File %s does not exist!' % fname)
-            assert(False)
+            assert False, f'File {fname} does not exist!'
 
         base,ext = os.path.splitext(fname)
         # print(ext)
@@ -23,13 +23,19 @@ class pyverilator_wrapper(object):
             shutil.copyfile(fname, ofname)
         else:
             ofname = fname
-
         print(ofname)
-        self.sim = pyverilator.PyVerilator.build(ofname, 
-                                                 verilog_path=src_dirs, 
-                                                 args=command_args) # args not available on pypi version of pyverilator
-                                                                    # https://github.com/bat52/pyverilator
+
+        self.sim = pyverilator.PyVerilator.build(ofname,
+                                                 verilog_path=src_dirs,
+                                                 args=command_args,
+                                                 dump_fst=dump_fst)
         if dump_en:
+            if dump_fst:
+                dump_ext = '.fst'
+            else:
+                dump_ext = '.vcd'
+            # start gtkwave to view the waveforms as they are made
+            self.sim.start_vcd_trace(dump_filename + dump_ext)
             self.view_waves()
 
     def view_waves(self):
@@ -38,5 +44,4 @@ class pyverilator_wrapper(object):
 
         # add all the io and internal signals to gtkwave
         self.sim.send_to_gtkwave(self.sim.io)
-        self.sim.send_to_gtkwave(self.sim.internals)
-
+        # self.sim.send_to_gtkwave(self.sim.internals)
