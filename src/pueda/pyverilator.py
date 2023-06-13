@@ -8,7 +8,7 @@ class pyverilator_wrapper(object):
     sim = None
 
     def __init__(self, fname='', src_dirs=[], command_args = [],
-                 dump_en = False, dump_fst = True, dump_filename = 'dump'):
+                 dump_en = False, dump_fst = False, dump_filename = 'dump'):
 
         # rename to .v, if .sv
         if not os.path.isfile(fname):
@@ -36,12 +36,12 @@ class pyverilator_wrapper(object):
                 dump_ext = '.vcd'
             # start gtkwave to view the waveforms as they are made
             self.sim.start_vcd_trace(dump_filename + dump_ext)
-            self.view_waves()
+            # self.view_waves()
 
     def view_waves(self):
         # start gtkwave to view the waveforms as they are made
         self.sim.start_gtkwave()
 
         # add all the io and internal signals to gtkwave
-        self.sim.send_to_gtkwave(self.sim.io)
+        # self.sim.send_to_gtkwave(self.sim.io)
         # self.sim.send_to_gtkwave(self.sim.internals)
