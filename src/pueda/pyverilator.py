@@ -10,7 +10,7 @@ class pyverilator_wrapper(object):
     dump_filename = ''
 
     def __init__(self, fname='', src_dirs=[], command_args = [],
-                 dump_en = False, dump_fst = False, dump_filename = 'dump'):
+                 dump_en = False, dump_fst = False, dump_filename = 'dump', dump_level=0):
 
         # rename to .v, if .sv
         if not os.path.isfile(fname):
@@ -30,7 +30,8 @@ class pyverilator_wrapper(object):
         self.sim = pyverilator.PyVerilator.build(ofname,
                                                  verilog_path=src_dirs,
                                                  args=command_args,
-                                                 dump_fst=dump_fst)
+                                                 dump_fst=dump_fst,
+                                                 dump_level=dump_level)
         if dump_en:
             if dump_fst:
                 dump_ext = '.fst'

@@ -19,7 +19,7 @@ class TestStringMethods(unittest.TestCase):
 
     def test_pyverilator_counter(self):
         from pueda.pyverilator import pyverilator_wrapper
-        pv = pyverilator_wrapper(fname='./counter/rtl/counter.v', src_dirs=['./counter/rtl'], command_args = [], dump_en = True)
+        pv = pyverilator_wrapper(fname='./counter/rtl/counter.v', src_dirs=['./counter/rtl'], command_args = [], dump_en = True, dump_level=1)
 
         for _ in range(16):
             pv.sim.clock.tick()
