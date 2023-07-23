@@ -6,11 +6,13 @@ import pyverilator
 from pueda.vcd import vcd_view
 
 class pyverilator_wrapper(object):
+    ''' generate a dut wrapper with pyverilator '''
     sim = None
     dump_filename = ''
 
     def __init__(self, fname='', src_dirs=[], command_args = [],
                  dump_en = False, dump_fst = False, dump_filename = 'dump', dump_level=0):
+        ''' initialize pyverilator wrapper '''
 
         # rename to .v, if .sv
         if not os.path.isfile(fname):
@@ -42,14 +44,19 @@ class pyverilator_wrapper(object):
             self.sim.start_vcd_trace(self.dump_filename)
             # self.view_waves()
 
-    def view_waves(self):
-        if False:
-            # start gtkwave to view the waveforms as they are made
-            self.sim.start_gtkwave()
+    def view_waves(self,savefname='',options='', postcmd='', block_en = True):
+        ''' view vcd waves with gtkwave '''
 
-            # add all the io and internal signals to gtkwave
-            # self.sim.send_to_gtkwave(self.sim.io)
-            # self.sim.send_to_gtkwave(self.sim.internals)
-        else:
-            vcd_view(self.dump_filename)
-
+        # if False:
+        #    # start gtkwave to view the waveforms as they are made
+        #    self.sim.start_gtkwave()
+        #
+        #    # add all the io and internal signals to gtkwave
+        #    # self.sim.send_to_gtkwave(self.sim.io)
+        #    # self.sim.send_to_gtkwave(self.sim.internals)
+        # else:
+        vcd_view(self.dump_filename,
+                    savefname=savefname,
+                    options=options,
+                    postcmd=postcmd,
+                    block_en=block_en)
