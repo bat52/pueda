@@ -155,6 +155,6 @@ class myhdl_cosim_wrapper(object):
     def sim_run(self,duration=0):
         self.sim.run(duration)
 
-    def sim_view(self, vcd = 'dump.vcd', gtkw = ''):
+    def sim_view(self, vcd = 'dump.vcd', gtkw = '', mode='gtkwave'):
         if self.dump_en:
-            vcd_view(os.path.join(self.work, fname = vcd, savefname = gtkw), block_en = False)
+            vcd_view(os.path.join(self.work, fname = vcd, savefname = gtkw), block_en = False, mode=mode)

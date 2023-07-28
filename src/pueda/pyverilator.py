@@ -44,7 +44,7 @@ class pyverilator_wrapper(object):
             self.sim.start_vcd_trace(self.dump_filename)
             # self.view_waves()
 
-    def view_waves(self,savefname='',options='', postcmd='', block_en = True):
+    def view_waves(self,savefname='',options='', postcmd='', block_en = True, mode='gtkwave'):
         ''' view vcd waves with gtkwave '''
 
         # if False:
@@ -59,4 +59,5 @@ class pyverilator_wrapper(object):
                     savefname=savefname,
                     options=options,
                     postcmd=postcmd,
-                    block_en=block_en)
+                    block_en=block_en,
+                    mode=mode)

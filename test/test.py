@@ -11,7 +11,7 @@ class TestStringMethods(unittest.TestCase):
     def test_edalize_icarus_hello(self):
         from pueda.edalize import icarus        
         icarus(simname='hello', top='hello_tb', src_dirs = ['./hello'])
-   
+
     def test_edalize_icarus_counter(self):
        from pueda.edalize import icarus
        icarus(simname='counter', top='counter_tb', src_dirs = ['./counter/rtl','./counter/tb'], iverilog_options=['-g2005-sv'])
@@ -25,7 +25,7 @@ class TestStringMethods(unittest.TestCase):
             pv.sim.clock.tick()
             print('count = %d' % pv.sim.io.count)
         assert pv.sim.io.count == 0
-        # pv.view_waves() this may hold the test, so skip it
+        pv.view_waves(mode='vcdterm', block_en=False)
 
     def test_verilator_counter(self):
         from test_verilator_counter import test_verilator_counter
