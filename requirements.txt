@@ -1,4 +1,4 @@
-shutil
+# shutil
 wget
 edalize
 pyverilator-mm
