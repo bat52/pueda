@@ -22,44 +22,44 @@ typedef unsigned char PLI_UBYTE8;
 #endif
 
 /* 64 bit type for time calculations */
-typedef unsigned long long myhdl_time64_t;
+// typedef unsigned long long verilator_time64_t;
+typedef long long verilator_time64_t; // mm: make this signed
 
-static int rpipe;
+// static int rpipe;
 static int wpipe;
 
-static vpiHandle from_myhdl_systf_handle = NULL;
-static vpiHandle to_myhdl_systf_handle = NULL;
+static vpiHandle from_verilator_systf_handle = NULL;
+static vpiHandle to_verilator_systf_handle = NULL;
 
 static char changeFlag[MAXARGS];
 
 // static char bufcp[MAXLINE];
 
-static myhdl_time64_t myhdl_time;
-static myhdl_time64_t verilog_time;
-static myhdl_time64_t pli_time;
+static verilator_time64_t verilator_time;
+static verilator_time64_t verilog_time;
+static verilator_time64_t pli_time;
 static int delta;
 
 /* prototypes */
-static PLI_INT32 from_myhdl_calltf(PLI_BYTE8 *user_data);
-static PLI_INT32 to_myhdl_calltf(PLI_BYTE8 *user_data);
+static PLI_INT32 from_verilator_calltf(PLI_BYTE8 *user_data);
+static PLI_INT32 to_verilator_calltf(PLI_BYTE8 *user_data);
 static PLI_INT32 readonly_callback(p_cb_data cb_data);
 static PLI_INT32 delay_callback(p_cb_data cb_data);
 static PLI_INT32 delta_callback(p_cb_data cb_data);
 static PLI_INT32 change_callback(p_cb_data cb_data);
 
 // static int init_pipes();
-
-void myhdl_register();
+void verilator_register();
 void (*vlog_startup_routines[])() = {
-      myhdl_register,
+      verilator_register,
       0
 };
 
-static myhdl_time64_t timestruct_to_time(const struct t_vpi_time*ts);
+static verilator_time64_t timestruct_to_time(const struct t_vpi_time*ts);
 
 /* from Icarus */
-static myhdl_time64_t timestruct_to_time(const struct t_vpi_time*ts) {
-	myhdl_time64_t ti = ts->high;
+static verilator_time64_t timestruct_to_time(const struct t_vpi_time*ts) {
+	verilator_time64_t ti = ts->high;
 	ti <<= 32;
 	ti += ts->low & 0xffffffff;
 	return ti;
@@ -76,13 +76,13 @@ static int init_pipes() {
 		return (0);
 	}
 
-	if ((w = getenv("MYHDL_TO_PIPE")) == NULL) {
-		vpi_printf("ERROR: no write pipe to myhdl\n");
+	if ((w = getenv("verilator_TO_PIPE")) == NULL) {
+		vpi_printf("ERROR: no write pipe to verilator\n");
 		vpi_control(vpiFinish, 1); // abort simulation
 		return (0);
 	}
-	if ((r = getenv("MYHDL_FROM_PIPE")) == NULL) {
-		vpi_printf("ERROR: no read pipe from myhdl\n");
+	if ((r = getenv("verilator_FROM_PIPE")) == NULL) {
+		vpi_printf("ERROR: no read pipe from verilator\n");
 		vpi_control(vpiFinish, 1); // abort simulation
 		return (0);
 	}
@@ -98,21 +98,21 @@ static int init_pipes() {
 }
 */
 
-static PLI_INT32 from_myhdl_calltf(PLI_BYTE8 *user_data) {
+static PLI_INT32 from_verilator_calltf(PLI_BYTE8 *user_data) {
 	vpiHandle reg_iter, reg_handle;
 	s_vpi_time verilog_time_s;
 	char buf[MAXLINE];
 	char s[MAXWIDTH];
 	int n;
 
-	static int from_myhdl_flag = 0;
+	static int from_verilator_flag = 0;
 
-	if (from_myhdl_flag) {
-		vpi_printf("ERROR: $from_myhdl called more than once\n");
+	if (from_verilator_flag) {
+		vpi_printf("ERROR: $from_verilator called more than once\n");
 		vpi_control(vpiFinish, 1); /* abort simulation */
 		return (0);
 	}
-	from_myhdl_flag = 1;
+	from_verilator_flag = 1;
 
 	// init_pipes();
 
@@ -120,7 +120,7 @@ static PLI_INT32 from_myhdl_calltf(PLI_BYTE8 *user_data) {
 	vpi_get_time(NULL, &verilog_time_s);
 	verilog_time = timestruct_to_time(&verilog_time_s);
 	if (verilog_time != 0) {
-		vpi_printf("ERROR: $from_myhdl should be called at time 0\n");
+		vpi_printf("ERROR: $from_verilator should be called at time 0\n");
 		vpi_control(vpiFinish, 1); /* abort simulation */
 		return (0);
 	}
@@ -128,29 +128,36 @@ static PLI_INT32 from_myhdl_calltf(PLI_BYTE8 *user_data) {
 	pli_time = 0;
 	delta = 0;
 
-	from_myhdl_systf_handle = vpi_handle(vpiSysTfCall, NULL);
-	reg_iter = vpi_iterate(vpiArgument, from_myhdl_systf_handle);
+	from_verilator_systf_handle = vpi_handle(vpiSysTfCall, NULL);
+	reg_iter = vpi_iterate(vpiArgument, from_verilator_systf_handle);
 	while ((reg_handle = vpi_scan(reg_iter)) != NULL) {
-		/*
+	
 		if (vpi_get(vpiType, reg_handle) != vpiReg) {
 			
-			vpi_printf("ERROR: $from_myhdl argument %s should be a reg\n",
+			vpi_printf("ERROR: $from_verilator argument %s should be a reg\n",
 					vpi_get_str(vpiName, reg_handle));
 			vpi_control(vpiFinish, 1); // abort simulation
 			return (0);
 		}
 
+		/*
 		strcat(buf, vpi_get_str(vpiName, reg_handle));
 		strcat(buf, " ");
 		sprintf(s, "%d ", vpi_get(vpiSize, reg_handle));
 		strcat(buf, s);
 		*/
+
+		// value_s.format=vpiIntVal;
+		// vpi_get_value(reg_handle,&value_s);
+		// vpi_printf("# VPI net: %20s, Value: %d\n", vpi_get_str(vpiName,reg_handle), value_s.value.integer);
+		vpi_printf("# from_verilator VPI net: %20s\n", vpi_get_str(vpiName,reg_handle));
+		
 	}
 	// n = write(wpipe, buf, strlen(buf));
 
 	/*
 	if ((n = read(rpipe, buf, MAXLINE)) == 0) {
-		vpi_printf("Info: MyHDL simulator down\n");
+		vpi_printf("Info: verilator simulator down\n");
 		vpi_control(vpiFinish, 1); // abort simulation
 		return (0);
 	}
@@ -161,7 +168,7 @@ static PLI_INT32 from_myhdl_calltf(PLI_BYTE8 *user_data) {
 	return (0);
 }
 
-static PLI_INT32 to_myhdl_calltf(PLI_BYTE8 *user_data) {
+static PLI_INT32 to_verilator_calltf(PLI_BYTE8 *user_data) {
 	vpiHandle net_iter, net_handle;
 	char buf[MAXLINE];
 	char s[MAXWIDTH];
@@ -172,14 +179,14 @@ static PLI_INT32 to_myhdl_calltf(PLI_BYTE8 *user_data) {
 	s_vpi_time verilog_time_s;
 	s_vpi_time time_s;
 	s_vpi_value value_s;
-	static int to_myhdl_flag = 0;
+	static int to_verilator_flag = 0;
 
-	if (to_myhdl_flag) {
-		vpi_printf("ERROR: $to_myhdl called more than once\n");
+	if (to_verilator_flag) {
+		vpi_printf("ERROR: $to_verilator called more than once\n");
 		vpi_control(vpiFinish, 1); /* abort simulation */
 		return (0);
 	}
-	to_myhdl_flag = 1;
+	to_verilator_flag = 1;
 
 	// init_pipes();
 
@@ -187,7 +194,7 @@ static PLI_INT32 to_myhdl_calltf(PLI_BYTE8 *user_data) {
 	vpi_get_time(NULL, &verilog_time_s);
 	verilog_time = timestruct_to_time(&verilog_time_s);
 	if (verilog_time != 0) {
-		vpi_printf("ERROR: $to_myhdl should be called at time 0\n");
+		vpi_printf("ERROR: $to_verilator should be called at time 0\n");
 		vpi_control(vpiFinish, 1); /* abort simulation */
 		return (0);
 	}
@@ -203,23 +210,27 @@ static PLI_INT32 to_myhdl_calltf(PLI_BYTE8 *user_data) {
 	cb_data_s.cb_rtn = change_callback;
 	cb_data_s.time = &time_s;
 	// icarus stops on the following line but shouldn't
-	// cb_data_s.value = &value_s;
-	cb_data_s.value = NULL;
+	cb_data_s.value = &value_s;
+	//cb_data_s.value = NULL;
 	i = 0;
-	to_myhdl_systf_handle = vpi_handle(vpiSysTfCall, NULL);
-	net_iter = vpi_iterate(vpiArgument, to_myhdl_systf_handle);
+	to_verilator_systf_handle = vpi_handle(vpiSysTfCall, NULL);
+	net_iter = vpi_iterate(vpiArgument, to_verilator_systf_handle);
 
-/*
 	while ((net_handle = vpi_scan(net_iter)) != NULL) {
 		if (i == MAXARGS) {
-			vpi_printf("ERROR: $to_myhdl max #args (%d) exceeded\n", MAXARGS);
+			vpi_printf("ERROR: $to_verilator max #args (%d) exceeded\n", MAXARGS);
 			vpi_control(vpiFinish, 1); // abort simulation
 		}
 
+		/*
 		strcat(buf, vpi_get_str(vpiName, net_handle));
 		strcat(buf, " ");
 		sprintf(s, "%d ", vpi_get(vpiSize, net_handle));
 		strcat(buf, s);
+*/
+		value_s.format=vpiIntVal;
+		vpi_get_value(net_handle,&value_s);
+		vpi_printf("# VPI net: %20s, Value: %d\n", vpi_get_str(vpiName,net_handle), value_s.value.integer);
 
 		changeFlag[i] = 0;
 		id = malloc(sizeof(int));
@@ -229,12 +240,12 @@ static PLI_INT32 to_myhdl_calltf(PLI_BYTE8 *user_data) {
 		vpi_register_cb(&cb_data_s);
 		i++;
 	}
-	*/
+
 	// n = write(wpipe, buf, strlen(buf));
 
 /*
 	if ((n = read(rpipe, buf, MAXLINE)) == 0) {
-		vpi_printf("ABORT from $to_myhdl\n");
+		vpi_printf("ABORT from $to_verilator\n");
 		vpi_control(vpiFinish, 1); // abort simulation
 		return (0);
 	}
@@ -279,14 +290,14 @@ static PLI_INT32 readonly_callback(p_cb_data cb_data) {
 	char buf[MAXLINE];
 	int n;
 	int i;
-	char *myhdl_time_string;
-	myhdl_time64_t delay;
+	char *verilator_time_string;
+	verilator_time64_t delay;
 
 	static int start_flag = 1;
 
 	if (start_flag) {
 		start_flag = 0;
-		n = write(wpipe, "START", 5);
+		// n = write(wpipe, "START", 5);
 		// vpi_printf("INFO: RO cb at start-up\n");
 		/*
 		if ((n = read(rpipe, buf, MAXLINE)) == 0) {
@@ -311,22 +322,22 @@ static PLI_INT32 readonly_callback(p_cb_data cb_data) {
 			(verilog_time & 0xFFFFFFFF)
 					== ((pli_time * 1000 + delta) & 0xFFFFFFFF));
 	//sprintf(buf, "%llu ", pli_time);
-	net_iter = vpi_iterate(vpiArgument, to_myhdl_systf_handle);
+	net_iter = vpi_iterate(vpiArgument, to_verilator_systf_handle);
 	value_s.format = vpiHexStrVal;
-	/*
 	i = 0;
 	while ((net_handle = vpi_scan(net_iter)) != NULL) {
 		if (changeFlag[i]) {
-			strcat(buf, vpi_get_str(vpiName, net_handle));
-			strcat(buf, " ");
+			// strcat(buf, vpi_get_str(vpiName, net_handle));
+			// strcat(buf, " ");
 			vpi_get_value(net_handle, &value_s);
+			vpi_printf("Readonly CB, Name: %s, value: %s\n" , vpi_get_str(vpiName, net_handle), value_s.value.str);
 			// strcat(buf, value_s.value.str);
 			// strcat(buf, " ");
 			changeFlag[i] = 0;
 		}
 		i++;
 	}
-	*/
+
 	// n = write(wpipe, buf, strlen(buf));
 	/*
 	if ((n = read(rpipe, buf, MAXLINE)) == 0) {
@@ -341,10 +352,10 @@ static PLI_INT32 readonly_callback(p_cb_data cb_data) {
 	/* save copy for later callback */
 	// strcpy(bufcp, buf);
 
-	myhdl_time_string = strtok(buf, " ");
-	myhdl_time = (myhdl_time64_t) strtoull(myhdl_time_string, (char **) NULL,
+	verilator_time_string = strtok(buf, " ");
+	verilator_time = (verilator_time64_t) strtoull(verilator_time_string, (char **) NULL,
 			10);
-	delay = (myhdl_time - pli_time) * 1000;
+	delay = (verilator_time - pli_time) * 1000;
 	assert(delay >= 0);
 	assert(delay <= 0xFFFFFFFF);
 	if (delay > 0) { // schedule cbAfterDelay callback
@@ -356,7 +367,7 @@ static PLI_INT32 readonly_callback(p_cb_data cb_data) {
 		/* Icarus 20031009 has a different scheduler, more correct I believe */
 		/* compensation is no longer necessary */
 		delta = 0;
-		pli_time = myhdl_time;
+		pli_time = verilator_time;
 
 		// register cbAfterDelay callback //
 		time_s.type = vpiSimTime;
@@ -420,18 +431,26 @@ static PLI_INT32 delta_callback(p_cb_data cb_data) {
 	/* skip time value */
 	// strtok(bufcp, " ");
 
-	reg_iter = vpi_iterate(vpiArgument, from_myhdl_systf_handle);
+	// vpi_printf("delta callback\n");
 
 	/*
+	reg_iter = vpi_iterate(vpiArgument, from_verilator_systf_handle);
+	while ((reg_handle = vpi_scan(reg_iter)) != NULL) {
+			vpi_get_value(reg_handle, &value_s);
+			vpi_printf("delta CB, Name: %s, value: %s\n" , vpi_get_str(vpiName, reg_handle), value_s.value.str);
+	}
+	*/
+
 	value_s.format = vpiHexStrVal;
 	while ((value_s.value.str = strtok(NULL, " ")) != NULL) {
 		reg_handle = vpi_scan(reg_iter);
 		vpi_put_value(reg_handle, &value_s, NULL, vpiNoDelay);
+		vpi_get_value(reg_handle, &value_s);
+		vpi_printf("delta CB, Name: %s, value: %s\n" , vpi_get_str(vpiName, reg_handle), value_s.value.str);
 	}
 	if (reg_iter != NULL) {
 		vpi_free_object(reg_iter);
 	}
-	*/
 
 	// register readonly callback //
 	time_s.type = vpiSimTime;
@@ -469,23 +488,23 @@ static PLI_INT32 change_callback(p_cb_data cb_data) {
 	return (0);
 }
 
-void myhdl_register() {
+void verilator_register() {
 	s_vpi_systf_data tf_data;
 
 	tf_data.type = vpiSysTask;
-	tf_data.tfname = "$to_myhdl";
-	tf_data.calltf = (void *) to_myhdl_calltf;
+	tf_data.tfname = "$to_verilator";
+	tf_data.calltf = (void *) to_verilator_calltf;
 	tf_data.compiletf = NULL;
 	tf_data.sizetf = NULL;
-	tf_data.user_data = "$to_myhdl";
+	tf_data.user_data = "$to_verilator";
 	vpi_register_systf(&tf_data);
 
 	tf_data.type = vpiSysTask;
-	tf_data.tfname = "$from_myhdl";
-	tf_data.calltf = (void *) from_myhdl_calltf;
+	tf_data.tfname = "$from_verilator";
+	tf_data.calltf = (void *) from_verilator_calltf;
 	tf_data.compiletf = NULL;
 	tf_data.sizetf = NULL;
-	tf_data.user_data = "$from_myhdl";
+	tf_data.user_data = "$from_verilator";
 	vpi_register_systf(&tf_data);
 }
 

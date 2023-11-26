@@ -7,17 +7,17 @@
 module counter_tb;
 reg clk,reset,load,ud;
 reg [3:0] data;
-wire [3:0] count;
+reg [3:0] count;
 
 // instance counter design
 /* counter ct_1(.up_down(ud),.*); */
 
 initial begin
-    $to_myhdl(clk, reset, ud, load, data);
+    $to_verilator(clk, reset, ud, load, data);
 end
 
 initial begin
-    $from_myhdl(count);
+    $from_verilator(count);
 end
 
 initial begin
