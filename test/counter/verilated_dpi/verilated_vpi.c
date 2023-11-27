@@ -428,28 +428,15 @@ static PLI_INT32 delta_callback(p_cb_data cb_data) {
 		return (0);
 	}
 
-	/* skip time value */
-	// strtok(bufcp, " ");
-
 	// vpi_printf("delta callback\n");
 
-	/*
 	reg_iter = vpi_iterate(vpiArgument, from_verilator_systf_handle);
 	while ((reg_handle = vpi_scan(reg_iter)) != NULL) {
-			vpi_get_value(reg_handle, &value_s);
-			vpi_printf("delta CB, Name: %s, value: %s\n" , vpi_get_str(vpiName, reg_handle), value_s.value.str);
-	}
-	*/
+			vpi_printf("delta CB, Name: %s\n" , vpi_get_str(vpiName, reg_handle));
 
-	value_s.format = vpiHexStrVal;
-	while ((value_s.value.str = strtok(NULL, " ")) != NULL) {
-		reg_handle = vpi_scan(reg_iter);
-		vpi_put_value(reg_handle, &value_s, NULL, vpiNoDelay);
-		vpi_get_value(reg_handle, &value_s);
-		vpi_printf("delta CB, Name: %s, value: %s\n" , vpi_get_str(vpiName, reg_handle), value_s.value.str);
-	}
-	if (reg_iter != NULL) {
-		vpi_free_object(reg_iter);
+			value_s.format=vpiIntVal;
+			value_s.value.integer = 8;
+			vpi_put_value(reg_handle, &value_s, NULL, vpiNoDelay);
 	}
 
 	// register readonly callback //
