@@ -13,13 +13,16 @@ DUT_VERILATED_DIR=./obj_dir
 all: sim view
 
 clean: 
-	rm -rf *.o *.vpi *.vcd ./obj_dir
+	rm -rf *.o *.vpi *.vcd ${DUT_VERILATED_DIR}
 	
 tb:
 	iverilog ${TB_V} -o ${TB_OBJ}
 
 vpi:
 	iverilog-vpi ${VPI_C}
+
+verilate:
+	verilator --cc ${DUT} --clk clk
 
 sim: clean tb vpi
 	vvp -M . -m${VPI} ${TB_OBJ}

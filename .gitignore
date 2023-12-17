@@ -11,3 +11,4 @@ test/obj_dir/*
 src/pueda.egg-info/*
 *.fst
 *.fst.hier
+test/counter/verilated_dpi/obj_dir/*

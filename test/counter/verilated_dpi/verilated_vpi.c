@@ -26,13 +26,13 @@ typedef unsigned char PLI_UBYTE8;
 typedef long long verilator_time64_t; // mm: make this signed
 
 // static int rpipe;
-static int wpipe;
+// static int wpipe;
 
 static vpiHandle from_verilator_systf_handle = NULL;
 static vpiHandle to_verilator_systf_handle = NULL;
 
 static char changeFlag[MAXARGS];
-
+static int data; // mm
 // static char bufcp[MAXLINE];
 
 static verilator_time64_t verilator_time;
@@ -323,17 +323,25 @@ static PLI_INT32 readonly_callback(p_cb_data cb_data) {
 					== ((pli_time * 1000 + delta) & 0xFFFFFFFF));
 	//sprintf(buf, "%llu ", pli_time);
 	net_iter = vpi_iterate(vpiArgument, to_verilator_systf_handle);
-	value_s.format = vpiHexStrVal;
+	// value_s.format = vpiHexStrVal;
+	value_s.format = vpiIntVal;
 	i = 0;
 	while ((net_handle = vpi_scan(net_iter)) != NULL) {
 		if (changeFlag[i]) {
 			// strcat(buf, vpi_get_str(vpiName, net_handle));
 			// strcat(buf, " ");
 			vpi_get_value(net_handle, &value_s);
-			vpi_printf("Readonly CB, Name: %s, value: %s\n" , vpi_get_str(vpiName, net_handle), value_s.value.str);
+			vpi_printf("Readonly CB, Name: %s, value: %d\n" , 
+				vpi_get_str(vpiName, net_handle) , value_s.value.integer);
 			// strcat(buf, value_s.value.str);
 			// strcat(buf, " ");
 			changeFlag[i] = 0;
+			
+			// mm
+			if ( strcmp(vpi_get_str(vpiName, net_handle),"data")==0 ) {
+				data = value_s.value.integer;
+				vpi_printf("Readonly CB, data: %d\n" , data); 
+			}
 		}
 		i++;
 	}
@@ -428,28 +436,16 @@ static PLI_INT32 delta_callback(p_cb_data cb_data) {
 		return (0);
 	}
 
-	/* skip time value */
-	// strtok(bufcp, " ");
-
 	// vpi_printf("delta callback\n");
 
-	/*
 	reg_iter = vpi_iterate(vpiArgument, from_verilator_systf_handle);
 	while ((reg_handle = vpi_scan(reg_iter)) != NULL) {
-			vpi_get_value(reg_handle, &value_s);
-			vpi_printf("delta CB, Name: %s, value: %s\n" , vpi_get_str(vpiName, reg_handle), value_s.value.str);
-	}
-	*/
+			vpi_printf("delta CB, Name: %s\n" , vpi_get_str(vpiName, reg_handle));
+			vpi_printf("delta CB, Value: %d\n" , data);
 
-	value_s.format = vpiHexStrVal;
-	while ((value_s.value.str = strtok(NULL, " ")) != NULL) {
-		reg_handle = vpi_scan(reg_iter);
-		vpi_put_value(reg_handle, &value_s, NULL, vpiNoDelay);
-		vpi_get_value(reg_handle, &value_s);
-		vpi_printf("delta CB, Name: %s, value: %s\n" , vpi_get_str(vpiName, reg_handle), value_s.value.str);
-	}
-	if (reg_iter != NULL) {
-		vpi_free_object(reg_iter);
+			value_s.format=vpiIntVal;
+			value_s.value.integer = data;
+			vpi_put_value(reg_handle, &value_s, NULL, vpiNoDelay);
 	}
 
 	// register readonly callback //
