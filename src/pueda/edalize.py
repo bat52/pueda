@@ -57,13 +57,14 @@ def eda_get_files(dirlist,work_root,fmts=['.v','.sv','.vh'],print_en=False) -> l
             f = {'name' : os.path.relpath(fname, work_root),
             'file_type' : 'unknown'}
                     
-        files.append(f)     
+        files.append(f)
 
     return files
 
 def icarus(simname='', top='', src_dirs = [], inc_dirs = [], 
            dump_en = False, dump_fst_vpi = False, run_en = True, myhdl_en = False,
-            iverilog_options = []) -> None:
+            iverilog_options = [],
+            plot_mode = 'vcdterm', plot_block_en = False) -> None:
     
     # tool
     tool = 'icarus'
@@ -136,16 +137,18 @@ def icarus(simname='', top='', src_dirs = [], inc_dirs = [],
                 dump_file = 'dump.fst'
             else:
                 dump_file = 'dump.vcd'
-            vcd_view(os.path.join(work_root, dump_file))
+            vcd_view(os.path.join(work_root, dump_file),
+                     mode=plot_mode, block_en=plot_block_en)
 
     return {'backend'   : backend,
             'work_root' : work_root, 
             'mvpi'      : mvpi
             }
 
-def verilator(simname='', top='', src_dir=[], inc_dir = [], 
+def verilator(simname='', top='', src_dir=[], inc_dir = [],
               options = [],
-              dump_en = True, dump_fst = False, gtkw='',sim_en=True) -> None:
+              dump_en = True, dump_fst = False, gtkw = '', sim_en = True,
+              plot_mode = 'vcdterm', plot_block_en = False) -> None:
     # tool
     tool = 'verilator'
     work_root = get_clean_work(tool)
@@ -191,8 +194,8 @@ def verilator(simname='', top='', src_dir=[], inc_dir = [],
                 dump_file = 'dump.fst'
             else:
                 dump_file = 'dump.vcd'
-            vcd_view( os.path.join(work_root, dump_file), 
-                    gtkw, '-o')
+            vcd_view( fname=os.path.join(work_root, dump_file),
+                     options='-o', mode=plot_mode, block_en=plot_block_en)
 
 def trellis(simname='',top='',src_dir=[], inc_dir=[]) -> None:
 

@@ -8,9 +8,9 @@ from ast import literal_eval
 # https://pypi.org/project/vcdvcd/
 from vcdvcd import VCDVCD
 
-def vcd_view(fname, mode='gtkwave', savefname='',options='', postcmd='', block_en = True):
+def vcd_view(fname, mode='vcdterm', savefname='',options='', postcmd='', block_en=True):
     if mode == 'gtkwave':
-        vcd_view_gtkwave(fname,savefname=savefname, options=options, postcmd=postcmd, block_en = block_en)
+        vcd_view_gtkwave(fname,savefname=savefname, options=options, postcmd=postcmd, block_en=block_en)
     elif mode == 'vcdterm':
         vcd_view_terminal(fname, block_en=block_en)
     else:
@@ -36,7 +36,7 @@ def vcd_view_gtkwave(fname,savefname='',options='', postcmd='', block_en = True)
     # print(cmdstr)
     os.system(cmdstr)
 
-def vcd_view_terminal(fname, block_en=True):
+def vcd_view_terminal(fname, block_en=False):
     """ view vcd in terminal """
     # check if vcd is installed
     path = shutil.which("vcd")
@@ -50,6 +50,8 @@ def vcd_view_terminal(fname, block_en=True):
     cmdstr = f'vcd < {fname}'
     if block_en:
         cmdstr += ' | less -S'
+    else:
+        cmdstr += ' | cat'
 
     print(cmdstr)
     os.system(cmdstr)

@@ -10,7 +10,7 @@ def test_verilator_counter():
         simname='counter', top='counter',                        
         src_dir = ['./counter/rtl','./counter/verilator'], 
         inc_dir = [],
-        dump_en = False, sim_en=True)
+        dump_en = True, sim_en=True)
 
 if __name__ == '__main__':
     test_verilator_counter()            
