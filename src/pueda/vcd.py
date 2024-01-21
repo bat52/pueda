@@ -9,9 +9,17 @@ from ast import literal_eval
 from vcdvcd import VCDVCD
 
 def vcd_view(fname, mode='vcdterm', savefname='',options='', postcmd='', block_en=True):
+    """ Visualize dump file, supports .vcd and .fst formats """
+    assert os.path.isfile(fname), f'ERROR: file {fname} does not exist!'
     if mode == 'gtkwave':
         vcd_view_gtkwave(fname,savefname=savefname, options=options, postcmd=postcmd, block_en=block_en)
     elif mode == 'vcdterm':
+        fname_wo_ext,ext=os.path.splitext(fname)
+        if ext=='.fst':
+            vcdfname = fname_wo_ext + '.vcd'
+            os.system(f'fst2vcd {fname} -o {vcdfname}')            
+            assert os.path.isfile(vcdfname), f'ERROR: file {vcdfname} does not exist!'
+            fname = vcdfname
         vcd_view_terminal(fname, block_en=block_en)
     else:
         assert False, f'Unsupported view mode {mode} !!!'
