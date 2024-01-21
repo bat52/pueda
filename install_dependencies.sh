@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
 
 # actual dependencies
-sudo apt install verilator iverilog yosys gtkwave
+sudo apt update
+sudo apt install verilator iverilog yosys gtkwave python3-pip
+
+# python dependencies
+pip3 install -r requirements.txt
 
 # vcd viewer
 git clone https://github.com/yne/vcd.git 
@@ -10,4 +14,4 @@ make
 sudo make install
 
 # useful stuff
-sudo apt install python3-pip ipython3
+sudo apt install ipython3
