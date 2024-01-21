@@ -10,7 +10,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name='pueda',
-    version='0.1.7',
+    version='0.1.8',
     license='Apache 2.0',
     author="Marco Merlin",
     author_email='marcomerli@gmail.com',
@@ -25,7 +25,7 @@ setup(
     install_requires=[
           'wget',
           'edalize',
-          'pyverilator-mm',
+          'pyverilator-mm>=0.7.6',
           'dtrx',
           'myhdl',
           'veriloggen',
