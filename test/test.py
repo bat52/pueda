@@ -10,11 +10,13 @@ class TestStringMethods(unittest.TestCase):
 
     def test_edalize_icarus_hello(self):
         from pueda.edalize import icarus        
-        icarus(simname='hello', top='hello_tb', src_dirs = ['./hello'])
+        icarus(simname='hello', top='hello_tb', src_dirs = ['./hello'], dump_en=False)
 
     def test_edalize_icarus_counter(self):
        from pueda.edalize import icarus
-       icarus(simname='counter', top='counter_tb', src_dirs = ['./counter/rtl','./counter/tb'], iverilog_options=['-g2005-sv'])
+       icarus(simname='counter', top='counter_tb',
+              src_dirs = ['./counter/rtl','./counter/tb'],
+              iverilog_options=['-g2005-sv'])
        # self.assertEqual('foo'.upper(), 'FOO')
 
     def test_pyverilator_counter(self):

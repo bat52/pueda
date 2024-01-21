@@ -61,26 +61,28 @@ def eda_get_files(dirlist,work_root,fmts=['.v','.sv','.vh'],print_en=False) -> l
 
     return files
 
-def icarus(simname='', top='', src_dirs = [], inc_dirs = [], 
-           dump_en = False, dump_fst_vpi = False, run_en = True, myhdl_en = False,
+def icarus(simname='', top='', src_dirs = [], inc_dirs = [],
+            dump_en = True, dump_fst_vpi = True, run_en = True, myhdl_en = False,
             iverilog_options = [],
             plot_mode = 'vcdterm', plot_block_en = False) -> None:
-    
+    """ Icarus verilog helper function """
     # tool
     tool = 'icarus'
     work_root = get_clean_work(tool,True)
 
     if dump_en:
-
         r_data_path = '../../../../data/'
-        assert( pkg_resources.resource_isdir(pueda.__name__,r_data_path))
-
+        # assert pkg_resources.resource_isdir(pueda.__name__,r_data_path), 'ERROR: directory {r_data_path} does not exist!'
         data_path = pkg_resources.resource_filename(pueda.__name__,r_data_path)
-        
-        inc_dirs = inc_dirs + [ os.path.join(data_path, 'icarus/inc') ]
-        src_dirs = src_dirs + [ os.path.join(data_path, 'icarus/src') ]
-        # inc_dirs = inc_dirs + [ os.path.join(os.path.dirname(__file__), 'icarus/inc') ]
-        # src_dirs = src_dirs + [ os.path.join(os.path.dirname(__file__), 'icarus/src') ]
+
+        if pkg_resources.resource_isdir(pueda.__name__,r_data_path):
+            # pueda installed, look in shared data folder    
+            inc_dirs = inc_dirs + [ os.path.join(data_path, 'icarus/inc') ]
+            src_dirs = src_dirs + [ os.path.join(data_path, 'icarus/src') ]
+        else:
+            # pueda not installed, assume running from local git copy
+            inc_dirs = inc_dirs + [ os.path.join(os.path.dirname(__file__), '../../data/icarus/inc') ]
+            src_dirs = src_dirs + [ os.path.join(os.path.dirname(__file__), '../../data/icarus/src') ]
 
         iverilog_options += [
             '-DDUMP_EN', 
