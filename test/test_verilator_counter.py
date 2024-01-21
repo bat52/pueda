@@ -21,10 +21,11 @@ def test_verilator_counter():
         print('Verilator does not support verilog testbench!')
         # tested with verilator 4.099
         verilator(
-            simname='counter', top='counter',                        
-            src_dir = ['./counter/rtl','./counter/verilator'], 
+            simname='counter', top='counter',
+            src_dir = ['./counter/rtl','./counter/verilator'],
             inc_dir = [],
-            dump_en = True, sim_en=True)
-            
+            dump_en = False, sim_en=True)
+            # options=['--cc','--no-timing'],
+        
 if __name__ == '__main__':
     test_verilator_counter()            

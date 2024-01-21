@@ -16,12 +16,16 @@ class TestStringMethods(unittest.TestCase):
        from pueda.edalize import icarus
        icarus(simname='counter', top='counter_tb',
               src_dirs = ['./counter/rtl','./counter/tb'],
-              iverilog_options=['-g2005-sv'])
+              iverilog_options=['-g2005-sv'],
+              dump_en=False)
        # self.assertEqual('foo'.upper(), 'FOO')
 
     def test_pyverilator_counter(self):
         from pueda.pyverilator import pyverilator_wrapper
-        pv = pyverilator_wrapper(fname='./counter/rtl/counter.v', src_dirs=['./counter/rtl'], command_args = [], dump_en = True, dump_level=1)
+        pv = pyverilator_wrapper(fname='./counter/rtl/counter.v',
+                                 src_dirs=['./counter/rtl'],
+                                 command_args = [],
+                                 dump_en = False, dump_level=1)
 
         for _ in range(16):
             pv.sim.clock.tick()

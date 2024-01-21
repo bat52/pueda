@@ -20,6 +20,5 @@ module counter(clk,reset,up_down,load,data,count);
       count <= count - 1;
   end
 
-`include "dump.vh"
-
+// `include "dump.vh"
 endmodule /* counter */

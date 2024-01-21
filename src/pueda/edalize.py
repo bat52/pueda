@@ -11,6 +11,22 @@ from pueda.common import get_source_files_alldir, get_inc_list, get_clean_work
 from pueda.icarus import myhdl_vpi, fst_vpi
 from pueda.vcd    import vcd_view
 
+def get_dump_dirs():
+    r_data_path = '../../../../data/'
+    # assert pkg_resources.resource_isdir(pueda.__name__,r_data_path), 'ERROR: directory {r_data_path} does not exist!'
+    data_path = pkg_resources.resource_filename(pueda.__name__,r_data_path)
+
+    if pkg_resources.resource_isdir(pueda.__name__,r_data_path):
+        # pueda installed, look in shared data folder    
+        inc_dirs = [ os.path.join(data_path, 'icarus/inc') ]
+        src_dirs = [ os.path.join(data_path, 'icarus/src') ]
+    else:
+        # pueda not installed, assume running from local git copy
+        inc_dirs = [ os.path.join(os.path.dirname(__file__), '../../data/icarus/inc') ]
+        src_dirs = [ os.path.join(os.path.dirname(__file__), '../../data/icarus/src') ]
+
+    return inc_dirs, src_dirs
+
 def eda_get_files(dirlist,work_root,fmts=['.v','.sv','.vh'],print_en=False) -> list:
     fnames = get_source_files_alldir(dirlist,fmts=fmts)
     # print(fnames)
@@ -56,7 +72,7 @@ def eda_get_files(dirlist,work_root,fmts=['.v','.sv','.vh'],print_en=False) -> l
             print('unknown file extension for file %s !!!' % fname)
             f = {'name' : os.path.relpath(fname, work_root),
             'file_type' : 'unknown'}
-                    
+          
         files.append(f)
 
     return files
@@ -66,23 +82,15 @@ def icarus(simname='', top='', src_dirs = [], inc_dirs = [],
             iverilog_options = [],
             plot_mode = 'vcdterm', plot_block_en = False) -> None:
     """ Icarus verilog helper function """
+
     # tool
     tool = 'icarus'
     work_root = get_clean_work(tool,True)
 
     if dump_en:
-        r_data_path = '../../../../data/'
-        # assert pkg_resources.resource_isdir(pueda.__name__,r_data_path), 'ERROR: directory {r_data_path} does not exist!'
-        data_path = pkg_resources.resource_filename(pueda.__name__,r_data_path)
-
-        if pkg_resources.resource_isdir(pueda.__name__,r_data_path):
-            # pueda installed, look in shared data folder    
-            inc_dirs = inc_dirs + [ os.path.join(data_path, 'icarus/inc') ]
-            src_dirs = src_dirs + [ os.path.join(data_path, 'icarus/src') ]
-        else:
-            # pueda not installed, assume running from local git copy
-            inc_dirs = inc_dirs + [ os.path.join(os.path.dirname(__file__), '../../data/icarus/inc') ]
-            src_dirs = src_dirs + [ os.path.join(os.path.dirname(__file__), '../../data/icarus/src') ]
+        inc_dump, src_dump = get_dump_dirs()
+        inc_dirs += inc_dump
+        src_dirs += src_dump
 
         iverilog_options += [
             '-DDUMP_EN', 
@@ -158,7 +166,12 @@ def verilator(simname='', top='', src_dir=[], inc_dir = [],
     verilator_options = ['--top-module %s' % top ] + options
 
     if dump_en:
+        # inc_dump, src_dump = get_dump_dirs()
+        # inc_dir += inc_dump
+        # src_dir += src_dump
+    
         verilator_options += ['--trace']
+            
         if dump_fst:
             verilator_options += ['--trace-fst', '-CFLAGS -DDUMP_FST']
 

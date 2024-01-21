@@ -10,7 +10,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name='pueda',
-    version='0.1.8',
+    version='0.1.10',
     license='Apache 2.0',
     author="Marco Merlin",
     author_email='marcomerli@gmail.com',
