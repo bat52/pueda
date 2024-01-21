@@ -16,7 +16,7 @@ def test_verilator_counter():
             src_dir = ['./counter/rtl','./counter/tb'],
             inc_dir = [],
             options=['--binary'],
-            dump_en = True, sim_en=True)
+            dump_en = False, sim_en=True)
     else:
         print('Verilator does not support verilog testbench!')
         # tested with verilator 4.099
