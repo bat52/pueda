@@ -1,7 +1,7 @@
 # shutil
 wget
 edalize
-pyverilator-mm
+pyverilator-mm >= 0.7.6
 dtrx
 veriloggen
 myhdl
