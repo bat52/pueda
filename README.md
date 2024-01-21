@@ -5,6 +5,9 @@ A collection of Python tools for micro-Electronics Design Automation.
 PuEDA in an acronym, but also stands for a conjugate for of the Spanish verb "poder" which means "can".
 The project was born as part of a group of scripts to test the [cryptech](https://cryptech.is/) [ecdsa256](https://github.com/bat52/cryptech) IP.
 
+# Install (from pypi)
+    pip3 install pueda
+
 # Install (from github)
     pip3 install git+https://github.com/bat52/pueda.git@master
 
