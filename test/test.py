@@ -25,7 +25,7 @@ class TestStringMethods(unittest.TestCase):
         pv = pyverilator_wrapper(fname='./counter/rtl/counter.v',
                                  src_dirs=['./counter/rtl'],
                                  command_args = [],
-                                 dump_en = False, dump_level=1)
+                                 dump_en = True, dump_level=1)
 
         for _ in range(16):
             pv.sim.clock.tick()
