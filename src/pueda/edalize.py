@@ -80,7 +80,7 @@ def eda_get_files(dirlist,work_root,fmts=['.v','.sv','.vh'],print_en=False) -> l
 def icarus(simname='', top='', src_dirs = [], inc_dirs = [],
             dump_en = True, dump_fst_vpi = True, run_en = True, myhdl_en = False,
             iverilog_options = [],
-            plot_mode = 'vcdterm', plot_block_en = False) -> None:
+            plot_mode = 'vcdterm', plot_block_en = False, gtkw='') -> None:
     """ Icarus verilog helper function """
 
     # tool
@@ -147,7 +147,9 @@ def icarus(simname='', top='', src_dirs = [], inc_dirs = [],
                 dump_file = 'dump.fst'
             else:
                 dump_file = 'dump.vcd'
+
             vcd_view(os.path.join(work_root, dump_file),
+                    savefname=gtkw,
                      mode=plot_mode, block_en=plot_block_en)
 
     return {'backend'   : backend,
@@ -209,7 +211,9 @@ def verilator(simname='', top='', src_dir=[], inc_dir = [],
                 dump_file = 'dump.fst'
             else:
                 dump_file = 'dump.vcd'
+
             vcd_view( fname=os.path.join(work_root, dump_file),
+                     savefname=gtkw,
                      options='-o', mode=plot_mode, block_en=plot_block_en)
 
 def trellis(simname='',top='',src_dir=[], inc_dir=[]) -> None:
