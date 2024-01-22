@@ -1,8 +1,17 @@
+DATA=../../../data/icarus
+DUMP_V=${DATA}/src/dump.v
+DUMP_I=-I${DATA}/inc/
+# DUMP=${DUMP_I} ${DUMP_V} --DDUMP_LEVEL=0 -DDUMP_MODULE=${DUT}
 
-SRC=../rtl/counter
+DUT=counter
+SRC=../rtl/${DUT}
 SRC_V=${SRC}.v
-TB_V=../tb/counter_tb.v
+TB=counter_tb
+TB_V=../tb/${TB}.v
 SRC_C=dut.cpp test.cpp tests.c
+
+DUMP=${DUMP_I} -DDUMP_EN -DDUMP_LEVEL=0 -DDUMP_MODULE=${TB} -DTRACE_DEBUG --trace --trace-structs 
+
 VERILATOR_OUT=./obj_dir
 
 check: 
@@ -14,7 +23,10 @@ clean: check
 	rm -rf ${VERILATOR_OUT}
 
 verilate: clean
-	verilator -j `nproc` --binary ${SRC_V} ${TB_V}
+	verilator -j `nproc` --binary ${DUMP_V} ${SRC_V} ${TB_V} ${DUMP} --top ${TB}
 
 sim: verilate
-	${VERILATOR_OUT}/Vcounter
+	${VERILATOR_OUT}/V${TB}
+
+vcd: sim
+	vcd < dump.vcd | cat
