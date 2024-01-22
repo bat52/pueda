@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import os
+import multiprocessing
 import pkg_resources
 
 # from edalize import *
@@ -165,7 +166,9 @@ def verilator(simname='', top='', src_dir=[], inc_dir = [],
     tool = 'verilator'
     work_root = get_clean_work(tool)
 
-    verilator_options = ['--top-module %s' % top ] + options
+    verilator_options = options
+    verilator_options += [f'--top-module {top}' ]
+    verilator_options += ['-j %d' % multiprocessing.cpu_count() ]
 
     if dump_en:
         # inc_dump, src_dump = get_dump_dirs()
