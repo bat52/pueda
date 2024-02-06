@@ -19,7 +19,7 @@ jobs:
         ./install_dependencies.sh
     - name: tool versions
       run: | 
-        iverilog -V
+        iverilog -V | grep -n 1
         verilator --version
         yosys -V
     - name: pip configuration report
