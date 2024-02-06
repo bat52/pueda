@@ -7,11 +7,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.8", "3.9", "3.10","3.11"]
+        python-version: ["3.10","3.11"]
     steps:
-    - name: install verilator
-      run: | 
-        sudo apt install verilator
     - uses: actions/checkout@v4
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v5
@@ -20,6 +17,14 @@ jobs:
     - name: Install dependencies
       run: |
         ./install_dependencies.sh
+    - name: tool versions
+      run: | 
+        iverilog -V
+        verilator --version
+        yosys -V
+    - name: pip configuration report
+      run: |
+        pip list
     - name: test
       run: |
         cd ./test
