@@ -1,0 +1,26 @@
+name: TestUbuntu20p04
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04 # ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.8", "3.9", "3.10"]
+    steps:
+    - name: install verilator
+      run: | 
+        sudo apt install verilator
+    - uses: actions/checkout@v4
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: |
+        ./install_dependencies.sh
+    - name: test
+      run: |
+        cd ./test
+        python ./test.py
