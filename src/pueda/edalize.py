@@ -168,7 +168,7 @@ def verilator(simname='', top='', src_dir=[], inc_dir = [],
 
     verilator_options = options
     verilator_options += [f'--top-module {top}' ]
-    verilator_options += ['-j %d' % multiprocessing.cpu_count() ]
+    # verilator_options += ['-j %d' % multiprocessing.cpu_count() ] # does not work with version 4.028
 
     if dump_en:
         # inc_dump, src_dump = get_dump_dirs()
@@ -274,7 +274,7 @@ def yosys_edalize(simname='',top='',src_dir=[], inc_dir=[], arch='ice40') -> Non
             # 'yosys_synth_options'  : options,
             'arch': arch,
         },
-        
+    
     }
 
     edam = {
