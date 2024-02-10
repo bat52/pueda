@@ -11,6 +11,7 @@ import pueda
 from pueda.common import get_source_files_alldir, get_inc_list, get_clean_work
 from pueda.icarus import myhdl_vpi, fst_vpi
 from pueda.vcd    import vcd_view
+from pyverilator.verilator_tools import verilator_verilog_tb_ok
 
 def get_dump_dirs():
     r_data_path = '../../../../data/'
@@ -70,10 +71,10 @@ def eda_get_files(dirlist,work_root,fmts=['.v','.sv','.vh'],print_en=False) -> l
             f = {'name' : os.path.relpath(fname, work_root),
             'file_type' : 'verilogSource'}
         else:
-            print('unknown file extension for file %s !!!' % fname)
+            print(f'unknown file extension for file {fname} !!!')
             f = {'name' : os.path.relpath(fname, work_root),
             'file_type' : 'unknown'}
-          
+       
         files.append(f)
 
     return files
@@ -88,15 +89,17 @@ def icarus(simname='', top='', src_dirs = [], inc_dirs = [],
     tool = 'icarus'
     work_root = get_clean_work(tool,True)
 
+    # always include dump files, in case want to use them,
+    # even if dump is disabled
+    inc_dump, src_dump = get_dump_dirs()
+    inc_dirs += inc_dump
+    src_dirs += src_dump
+    
     if dump_en:
-        inc_dump, src_dump = get_dump_dirs()
-        inc_dirs += inc_dump
-        src_dirs += src_dump
-
         iverilog_options += [
             '-DDUMP_EN', 
             '-DDUMP_LEVEL=0', 
-            '-DDUMP_MODULE=%s' % top
+            f'-DDUMP_MODULE={top}'
             ]
         if dump_fst_vpi:
             iverilog_options += ['-DDUMP_FST_VPI']
@@ -111,7 +114,7 @@ def icarus(simname='', top='', src_dirs = [], inc_dirs = [],
     # is enabled by default when using icarus with edalize
     if dump_en and dump_fst_vpi:
         fvpi = fst_vpi()
-        vvp_options = ['-mfstdumper.so', '-M%s' % fvpi.work ]
+        vvp_options = ['-mfstdumper.so', f'-M{fvpi.work}']
     else:
         vvp_options = []
 
@@ -170,13 +173,14 @@ def verilator(simname='', top='', src_dir=[], inc_dir = [],
     verilator_options += [f'--top-module {top}' ]
     # verilator_options += ['-j %d' % multiprocessing.cpu_count() ] # does not work with version 4.028
 
+    if verilator_verilog_tb_ok():
+        inc_dump, src_dump = get_dump_dirs()
+        inc_dir += inc_dump
+        src_dir += src_dump
+
     if dump_en:
-        # inc_dump, src_dump = get_dump_dirs()
-        # inc_dir += inc_dump
-        # src_dir += src_dump
-    
         verilator_options += ['--trace']
-            
+           
         if dump_fst:
             verilator_options += ['--trace-fst', '-CFLAGS -DDUMP_FST']
 
