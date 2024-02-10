@@ -14,6 +14,8 @@ from pueda.vcd    import vcd_view
 from pyverilator.verilator_tools import verilator_verilog_tb_ok
 
 def get_dump_dirs():
+    """ pueda get dirs for verilog dump """
+
     r_data_path = '../../../../data/'
     # assert pkg_resources.resource_isdir(pueda.__name__,r_data_path), 'ERROR: directory {r_data_path} does not exist!'
     data_path = pkg_resources.resource_filename(pueda.__name__,r_data_path)
@@ -30,6 +32,8 @@ def get_dump_dirs():
     return inc_dirs, src_dirs
 
 def eda_get_files(dirlist,work_root,fmts=['.v','.sv','.vh'],print_en=False) -> list:
+    """ pueda collect files """
+
     fnames = get_source_files_alldir(dirlist,fmts=fmts)
     # print(fnames)
     
@@ -74,7 +78,7 @@ def eda_get_files(dirlist,work_root,fmts=['.v','.sv','.vh'],print_en=False) -> l
             print(f'unknown file extension for file {fname} !!!')
             f = {'name' : os.path.relpath(fname, work_root),
             'file_type' : 'unknown'}
-       
+     
         files.append(f)
 
     return files
@@ -83,7 +87,7 @@ def icarus(simname='', top='', src_dirs = [], inc_dirs = [],
             dump_en = True, dump_fst_vpi = True, run_en = True, myhdl_en = False,
             iverilog_options = [],
             plot_mode = 'vcdterm', plot_block_en = False, gtkw='') -> None:
-    """ Icarus verilog helper function """
+    """ pueda icarus wrapper through edalize """
 
     # tool
     tool = 'icarus'
@@ -165,6 +169,8 @@ def verilator(simname='', top='', src_dir=[], inc_dir = [],
               options = [],
               dump_en = True, dump_fst = False, gtkw = '', sim_en = True,
               plot_mode = 'vcdterm', plot_block_en = False) -> None:
+    """ pueda verilator wrapper through edalize """
+
     # tool
     tool = 'verilator'
     work_root = get_clean_work(tool)
@@ -180,7 +186,7 @@ def verilator(simname='', top='', src_dir=[], inc_dir = [],
 
     if dump_en:
         verilator_options += ['--trace']
-           
+
         if dump_fst:
             verilator_options += ['--trace-fst', '-CFLAGS -DDUMP_FST']
 
@@ -224,6 +230,7 @@ def verilator(simname='', top='', src_dir=[], inc_dir = [],
                      options='-o', mode=plot_mode, block_en=plot_block_en)
 
 def trellis(simname='',top='',src_dir=[], inc_dir=[]) -> None:
+    """ pueda trellis wrapper through edalize """
 
     # tool
     tool = 'trellis'
@@ -261,6 +268,7 @@ def trellis(simname='',top='',src_dir=[], inc_dir=[]) -> None:
     backend.run()
 
 def yosys_edalize(simname='',top='',src_dir=[], inc_dir=[], arch='ice40') -> None:
+    """ pueda yosys wrapper through edalize """
 
     # tool
     tool = 'yosys'
