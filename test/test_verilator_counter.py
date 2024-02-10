@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
 
+""" PuEDA: verilator tests """
+
 import sys
 import os
+from pyverilator.verilator_tools import verilator_verilog_tb_ok
 sys.path.append( os.path.join(os.path.dirname(__file__), '../src') )
+from pueda.edalize import verilator
 
 def test_verilator_counter():
-    from pueda.edalize import verilator
-    from pyverilator.verilator_tools import verilator_verilog_tb_ok
-
+    """ Test counter with verilator """
     if verilator_verilog_tb_ok():
         print('Verilator supports verilog testbench!')
         # tested with verilator 5.021
@@ -26,6 +28,6 @@ def test_verilator_counter():
             inc_dir = [],
             dump_en = False, sim_en=True)
             # options=['--cc','--no-timing'],
-        
+ 
 if __name__ == '__main__':
-    test_verilator_counter()            
+    test_verilator_counter()
