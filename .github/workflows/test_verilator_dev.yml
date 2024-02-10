@@ -45,7 +45,10 @@ jobs:
         export VERILATOR_ROOT=`pwd`/bin
         cd ..
     - name: check verilator version
-      run: | 
+      run: |
+        ls ./verilator
+        ls ./verilator/bin
+        which verilator
         verilator --version
     - name: check gcc version
       run: | 
