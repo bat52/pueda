@@ -114,4 +114,4 @@ def write_file_lines(fname, lines=[], mode='w', print_en=False):
 
     # print file
     if print_en:
-        os.system(f'cat {fname}' % fname)
+        os.system(f'cat {fname}')
