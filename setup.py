@@ -5,12 +5,12 @@ datadir = os.path.join('data','icarus')
 datafiles = [(d, [os.path.join(d,f) for f in files])
     for d, folders, files in os.walk(datadir)]
 
-with open("README.md", "r") as fh:
+with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setup(
     name='pueda',
-    version='0.1.11',
+    version='0.1.12',
     license='Apache 2.0',
     author="Marco Merlin",
     author_email='marcomerli@gmail.com',
