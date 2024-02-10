@@ -1,5 +1,8 @@
 #!/usr/bin/python3
 
+""" PuEDA: common functions
+A collection of Python tools for micro-Electronics Design Automation. """
+
 import os
 import shutil
 

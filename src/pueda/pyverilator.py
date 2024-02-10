@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 
+""" PuEDA: pyverilator functions
+A collection of Python tools for micro-Electronics Design Automation. """
+
 import os
 import shutil
 import pyverilator
@@ -7,6 +10,7 @@ from pueda.vcd import vcd_view
 
 class pyverilator_wrapper(object):
     ''' generate a dut wrapper with pyverilator '''
+    
     sim = None
     dump_filename = ''
 

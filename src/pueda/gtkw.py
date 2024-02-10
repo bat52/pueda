@@ -1,8 +1,12 @@
 #!/usr/bin/python3
 
+""" PuEDA: Gtkwave functions
+A collection of Python tools for micro-Electronics Design Automation. """
+
 from vcd.gtkw import GTKWSave
 
 def gen_gtkw_group(gtkw, gname, bit_signals, multibit_signals, nbits):
+    """ Generate Gtkwave group """
 
     with gtkw.group( gname ):
         multibit_signals_o = []
@@ -33,4 +37,4 @@ def gen_gtkw(fname = 'tb.gtkw', groups = [], nbits = 4):
     for g in groups:
         gen_gtkw_group(gtkw, g['gname'], g['bit_signals'], g['multibit_signals'], nbits)
 
-    pass
+

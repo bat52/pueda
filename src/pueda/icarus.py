@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 
+""" PuEDA: icarus verilog functions
+A collection of Python tools for micro-Electronics Design Automation. """
+
 import os
 import sys
 sys.path.append( os.path.join(os.path.dirname(__file__), '..') )

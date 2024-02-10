@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 
+""" PuEDA: MyHDL functions
+A collection of Python tools for micro-Electronics Design Automation. """
+
 import os
 from pueda.edalize import icarus
 from pueda.common import get_clean_work
@@ -8,6 +11,7 @@ import veriloggen as vg
 from myhdl import *
 
 def top2wrapper(topfile, topmodule,  filename='dut_wrapper.v', dump_en = False):
+    """ convert verilog top to a verilog wrapper """
 
     modules = vg.from_verilog.read_verilog_module(topfile)
     top = modules[topmodule]   # dut real instance
@@ -50,11 +54,12 @@ def top2wrapper(topfile, topmodule,  filename='dut_wrapper.v', dump_en = False):
     return wrapper_name
 
 def top2signals(topfile='', topmodule=''):
+    """ Extract signals from top module """
 
     modules = vg.from_verilog.read_verilog_module(topfile)
     top = modules[topmodule]   # dut real instance
 
-    slist = {}    
+    slist = {}
     for io,iotype in top.io_variable.items():
 
         if (isinstance(iotype,vg.core.vtypes.Input) or
@@ -64,6 +69,7 @@ def top2signals(topfile='', topmodule=''):
     return slist
 
 def cosim_make_stub(topfile='',topmodule='',filename='dut_wrapper.v', dump_en=False):
+    """ create cosimulation stub """
 
     tool = 'myhdl'
     work = get_clean_work(tool=tool,makedir=True)
@@ -74,6 +80,7 @@ def cosim_make_stub(topfile='',topmodule='',filename='dut_wrapper.v', dump_en=Fa
     return work, wrapper #, full_file
 
 def cosimulation(vpi_path='./work_myhdl_vpi', vpi='myhdl', dut='', work='./work_icarus', ports={}):
+    """ Run cosimulation """
     cmdstr = 'vvp -M %s -m%s %s' % (vpi_path, vpi, dut)
     
     os.chdir(work)
@@ -82,6 +89,7 @@ def cosimulation(vpi_path='./work_myhdl_vpi', vpi='myhdl', dut='', work='./work_
 
 def myhdl_cosim_dut(topmodule='', topfile='',dump_en=False, ports={},
     simname ='', src_dirs=[],inc_dirs=[], stub_en = False):
+    """ Generate cosimulation DUT """
 
     if stub_en:
         work, wrapper = cosim_make_stub(topfile=topfile,topmodule=topmodule, dump_en=dump_en)
@@ -116,16 +124,20 @@ def clk_driver(clk, period=10):
     return driver
 
 class myhdl_cosim_wrapper(object):
+    """ MyHDL cosimulation wrrapper class """
+
     topfile=''
     topmodule = ''
     simname=''
     src_dirs=[]
     inc_dirs=[]
     dump_en = True
-    duration = 10    
+    duration = 10
     work = ''
+    sim = None
 
-    def __init__(self, topfile='', topmodule='', src_dirs=[], inc_dirs=[], simname='', dump_en = False, duration=200):
+    def __init__(self, topfile='', topmodule='', src_dirs=[], inc_dirs=[],
+                 simname='', dump_en = False, duration=200):
         self.topfile = topfile
         self.topmodule=topmodule
         self.simname = simname
@@ -134,12 +146,12 @@ class myhdl_cosim_wrapper(object):
         self.dump_en = dump_en
         self.duration = duration
 
-        pass
-
     def dut_ports(self):
+        """ Return list of DUT ports """
         return top2signals(topfile=self.topfile, topmodule=self.topmodule)
 
-    def dut_instance(self, ports = {}):    
+    def dut_instance(self, ports = {}):
+        """ Generate DUT instance method """
         dut, self.work = myhdl_cosim_dut( topfile=self.topfile, 
                                     topmodule=self.topmodule, 
                                     ports=ports,
@@ -150,11 +162,15 @@ class myhdl_cosim_wrapper(object):
         return dut
 
     def sim_cfg(self,tb):
+        """ Configure Simulation method """
         self.sim = Simulation( tb )
 
     def sim_run(self,duration=0):
+        """ Run Simulation method """
         self.sim.run(duration)
 
     def sim_view(self, vcd = 'dump.vcd', gtkw = '', mode='gtkwave'):
+        """ View waveforms """
         if self.dump_en:
-            vcd_view(os.path.join(self.work, fname = vcd, savefname = gtkw), block_en = False, mode=mode)
+            vcd_view(os.path.join(self.work, fname = vcd, savefname = gtkw),
+                     block_en = False, mode=mode)

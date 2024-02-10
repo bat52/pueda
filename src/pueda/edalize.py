@@ -1,23 +1,26 @@
 #!/usr/bin/env python3
 
+""" PuEDA: edalize functions
+A collection of Python tools for micro-Electronics Design Automation. """
+
+
 import os
-import multiprocessing
+# import multiprocessing
 import pkg_resources
 
 # from edalize import *
 from edalize.edatool import get_edatool # required by edalize 0.5.0
+from pyverilator.verilator_tools import verilator_verilog_tb_ok
 
 import pueda
 from pueda.common import get_source_files_alldir, get_inc_list, get_clean_work
 from pueda.icarus import myhdl_vpi, fst_vpi
 from pueda.vcd    import vcd_view
-from pyverilator.verilator_tools import verilator_verilog_tb_ok
 
 def get_dump_dirs():
     """ pueda get dirs for verilog dump """
 
     r_data_path = '../../../../data/'
-    # assert pkg_resources.resource_isdir(pueda.__name__,r_data_path), 'ERROR: directory {r_data_path} does not exist!'
     data_path = pkg_resources.resource_filename(pueda.__name__,r_data_path)
 
     if pkg_resources.resource_isdir(pueda.__name__,r_data_path):
@@ -36,7 +39,7 @@ def eda_get_files(dirlist,work_root,fmts=['.v','.sv','.vh'],print_en=False) -> l
 
     fnames = get_source_files_alldir(dirlist,fmts=fmts)
     # print(fnames)
-    
+
     # build list of dict as needed by edalize
     files = []
     for fname in fnames:
@@ -78,7 +81,6 @@ def eda_get_files(dirlist,work_root,fmts=['.v','.sv','.vh'],print_en=False) -> l
             print(f'unknown file extension for file {fname} !!!')
             f = {'name' : os.path.relpath(fname, work_root),
             'file_type' : 'unknown'}
-     
         files.append(f)
 
     return files
@@ -98,7 +100,7 @@ def icarus(simname='', top='', src_dirs = [], inc_dirs = [],
     inc_dump, src_dump = get_dump_dirs()
     inc_dirs += inc_dump
     src_dirs += src_dump
-    
+
     if dump_en:
         iverilog_options += [
             '-DDUMP_EN', 
@@ -144,7 +146,7 @@ def icarus(simname='', top='', src_dirs = [], inc_dirs = [],
 
     backend = get_edatool(tool)(edam=edam,
                                 work_root=work_root)
-    
+
     backend.configure()
     backend.build()
 
@@ -235,7 +237,7 @@ def trellis(simname='',top='',src_dir=[], inc_dir=[]) -> None:
     # tool
     tool = 'trellis'
     work_root = get_clean_work(tool)
-    
+
     # get design files
     files = eda_get_files(src_dir, work_root, fmts=['.v'])
 
@@ -273,20 +275,20 @@ def yosys_edalize(simname='',top='',src_dir=[], inc_dir=[], arch='ice40') -> Non
     # tool
     tool = 'yosys'
     work_root = get_clean_work(tool)
-    
+
     # get design files
     files = eda_get_files(src_dir, work_root, fmts=['.v'])
 
     # get include directories
     files += eda_get_files(inc_dir, work_root, fmts=['.vh'])
-    
+
     tool_options = {
         tool :
             {
             # 'yosys_synth_options'  : options,
             'arch': arch,
         },
-    
+
     }
 
     edam = {

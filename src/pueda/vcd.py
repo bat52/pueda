@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
 
+
+""" PuEDA: .vcd file functions
+A collection of Python tools for micro-Electronics Design Automation. """
+
 import os
 import numpy as np
 import shutil
