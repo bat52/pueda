@@ -3,7 +3,6 @@
 """ PuEDA: edalize functions
 A collection of Python tools for micro-Electronics Design Automation. """
 
-
 import os
 # import multiprocessing
 import pkg_resources
