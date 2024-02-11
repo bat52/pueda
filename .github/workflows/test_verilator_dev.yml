@@ -70,4 +70,4 @@ jobs:
     - name: test
       run: |
         cd ./test
-        python ./test.py -k verilator
+        python ./test.py -k test_verilator_counter
