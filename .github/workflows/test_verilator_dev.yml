@@ -23,6 +23,9 @@ jobs:
     - name: Install pyverilator-mm
       run: |
         pip install pyverilator-mm
+    - name: Install wget
+      run: |
+        pip install wget
     - name: pip configuration report
       run: |
         pip list
