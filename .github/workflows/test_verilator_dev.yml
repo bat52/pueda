@@ -42,7 +42,8 @@ jobs:
         make -j `nproc`  # Build Verilator itself (if error, try just 'make')
         # sudo make install
 
-        export VERILATOR_ROOT=`pwd`/bin
+        export VERILATOR_ROOT=`pwd`
+        export PATH=$PATH:$VERILATOR_ROOT/bin
         cd ..
     - name: check verilator version
       run: |
