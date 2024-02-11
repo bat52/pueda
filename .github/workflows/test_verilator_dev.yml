@@ -40,10 +40,14 @@ jobs:
         autoconf         # Create ./configure script
         ./configure      # Configure and create Makefile
         make -j `nproc`  # Build Verilator itself (if error, try just 'make')
-        # sudo make install
 
+        sudo make install
         set VERILATOR_ROOT=`pwd`
-        set PATH=$PATH:$VERILATOR_ROOT/bin
+        # set PATH=$PATH:$VERILATOR_ROOT/bin
+
+    - name: test verilator
+      run: |
+        make test      
         cd ..
     - name: check verilator version
       run: |
