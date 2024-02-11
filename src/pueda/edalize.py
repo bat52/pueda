@@ -85,7 +85,8 @@ def eda_get_files(dirlist,work_root,fmts=['.v','.sv','.vh'],print_en=False) -> l
     return files
 
 def icarus(simname='', top='', src_dirs = [], inc_dirs = [],
-            dump_en = True, dump_fst_vpi = True, run_en = True, myhdl_en = False,
+            dump_en = True, dump_include_en = True,
+            dump_fst_vpi = True, run_en = True, myhdl_en = False,
             iverilog_options = [],
             plot_mode = 'vcdterm', plot_block_en = False, gtkw='') -> None:
     """ pueda icarus wrapper through edalize """
@@ -94,11 +95,10 @@ def icarus(simname='', top='', src_dirs = [], inc_dirs = [],
     tool = 'icarus'
     work_root = get_clean_work(tool,True)
 
-    # always include dump files, in case want to use them,
-    # even if dump is disabled
-    inc_dump, src_dump = get_dump_dirs()
-    inc_dirs += inc_dump
-    src_dirs += src_dump
+    if dump_include_en:
+        inc_dump, src_dump = get_dump_dirs()
+        inc_dirs += inc_dump
+        src_dirs += src_dump
 
     if dump_en:
         iverilog_options += [
@@ -168,7 +168,8 @@ def icarus(simname='', top='', src_dirs = [], inc_dirs = [],
 
 def verilator(simname='', top='', src_dir=[], inc_dir = [],
               options = [],
-              dump_en = True, dump_fst = False, gtkw = '', sim_en = True,
+              dump_en = True, dump_fst = False, dump_include_en = False,
+              gtkw = '', sim_en = True,
               plot_mode = 'vcdterm', plot_block_en = False) -> None:
     """ pueda verilator wrapper through edalize """
 
@@ -180,7 +181,7 @@ def verilator(simname='', top='', src_dir=[], inc_dir = [],
     verilator_options += [f'--top-module {top}' ]
     # verilator_options += ['-j %d' % multiprocessing.cpu_count() ] # does not work with version 4.028
 
-    if verilator_verilog_tb_ok():
+    if verilator_verilog_tb_ok() and dump_include_en:
         inc_dump, src_dump = get_dump_dirs()
         inc_dir += inc_dump
         src_dir += src_dump
