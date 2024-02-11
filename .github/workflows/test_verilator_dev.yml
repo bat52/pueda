@@ -44,13 +44,12 @@ jobs:
 
         set VERILATOR_ROOT=`pwd`
         set PATH=$PATH:$VERILATOR_ROOT/bin
-        which verilator
         cd ..
     - name: check verilator version
       run: |
         # ls ./verilator
         # ls ./verilator/bin
-        which verilator
+        # which verilator
         verilator --version
     - name: check gcc version
       run: | 
