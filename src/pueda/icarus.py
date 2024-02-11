@@ -10,6 +10,7 @@ sys.path.append( os.path.join(os.path.dirname(__file__), '..') )
 from pueda.common import get_source_files_alldir, get_remote_files, get_work_path, work_exists, get_clean_work, list2str, get_inc_list
 
 def vpi_make(src_dirs=['./'], inc_dirs=[], args = []):
+    """ make a verilog VPI """
     # print(src_dirs)
     src = get_source_files_alldir(src_dirs,fmts=['.c','.cc','.cpp'])
     inc = get_inc_list(inc_dirs)
@@ -45,11 +46,11 @@ class custom_vpi(object):
     def _init_work(self,tool='',rm_en=False):
         exist = work_exists(tool)
 
-        if rm_en or not(exist):
+        if rm_en or not exist:
             self.work = get_clean_work(tool=tool,rm_en=rm_en) # do not remove if exist
         else:
-            self.work = get_work_path(tool)        
-        
+            self.work = get_work_path(tool)
+
         return exist
 
     def _get_custom_vpi(self,url,flist):
@@ -58,7 +59,7 @@ class custom_vpi(object):
     def auto_make(self,inc_dirs=[],args=[]):
         new_inc = [os.path.join(self.work,ii) for ii in inc_dirs]
         vpi_make(src_dirs=[self.work], inc_dirs=new_inc,args=args)
-        os.system('mv *.vpi %s' % self.work)
+        os.system(f'mv *.vpi {self.work}')
 
     def custom_make(self,cmds=[]):
         cmdstr = ' && '.join(cmds)
@@ -66,6 +67,7 @@ class custom_vpi(object):
         os.system(cmdstr)
 
 class myhdl_vpi(custom_vpi):
+    """ Class for MyHDL VPI for verilog co-simulation """
     def __init__(self):
         tool='myhdl_vpi'
         url="https://raw.githubusercontent.com/myhdl/myhdl/master/cosimulation/icarus"
@@ -73,14 +75,14 @@ class myhdl_vpi(custom_vpi):
         custom_vpi.__init__(self,tool=tool,url=url,flist=flist) # , args=['-w'])
 
 class fst_vpi(custom_vpi):
-   
+    """ Class VPI for .fst dumping in verilog simulation """
     def __init__(self):
         tool='fst_vpi'
         url="https://github.com/semify-eda/fstdumper/archive/refs/heads/main.zip"        
         self._init_work(tool=tool)
         cmds = ['cd %s' % os.path.join(self.work,'fstdumper-main'),
                 'make simulation-iverilog',
-                'mv *.vpi %s' % self.work ,
+                f'mv *.vpi {self.work}',
                 'cd ..']
         custom_vpi.__init__(self,tool=tool,url=url,custom_make_cmds=cmds)
 
