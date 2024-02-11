@@ -20,6 +20,9 @@ jobs:
     - name: Install edalize
       run: |
         pip install edalize
+    - name: Install pyverilator-mm
+      run: |
+        pip install pyverilator-mm
     - name: pip configuration report
       run: |
         pip list
