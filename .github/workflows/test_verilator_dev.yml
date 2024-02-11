@@ -17,15 +17,9 @@ jobs:
     - name: Install pip
       run: |
         sudo apt install python3-pip
-    - name: Install edalize
+    - name: Install requirements
       run: |
-        pip install edalize
-    - name: Install pyverilator-mm
-      run: |
-        pip install pyverilator-mm
-    - name: Install wget
-      run: |
-        pip install wget
+        pip install -r requirements.txt
     - name: pip configuration report
       run: |
         pip list
